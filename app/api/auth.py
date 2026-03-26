@@ -1,0 +1,55 @@
+from fastapi import APIRouter, Depends, Form, HTTPException
+from sqlalchemy.orm import Session
+
+from app.core.db import get_db
+from app.core.security import hash_password, verify_password
+from app.models.user import User
+from app.schemas.auth import CompleteProfileRequest, LoginRequest, RegisterRequest, TokenPairResponse
+from app.schemas.user import UserOut
+from app.services.auth_service import issue_session_tokens, normalize_phone
+
+router = APIRouter(prefix='/auth', tags=['auth'])
+
+
+@router.post('/register')
+def register(payload: RegisterRequest, db: Session = Depends(get_db)):
+    if payload.password != payload.confirm_password:
+        raise HTTPException(status_code=400, detail='Passwords do not match')
+
+    phone_number = normalize_phone(payload.phone_number)
+    existing = db.query(User).filter(User.phone_number == phone_number).first()
+    if existing:
+        raise HTTPException(status_code=409, detail='Phone already registered')
+
+    user = User(
+        phone_prefix=payload.phone_prefix,
+        phone_number=phone_number,
+        password_hash=hash_password(payload.password),
+        first_name='',
+        last_name='',
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return {'user_id': user.id, 'status': 'registered'}
+
+
+@router.post('/complete-profile', response_model=UserOut)
+def complete_profile(payload: CompleteProfileRequest, user_id: int = Form(...), db: Session = Depends(get_db)):
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail='User not found')
+    user.first_name = payload.first_name
+    user.last_name = payload.last_name
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.post('/login', response_model=TokenPairResponse)
+def login(payload: LoginRequest, db: Session = Depends(get_db)):
+    phone_number = normalize_phone(payload.phone_number)
+    user = db.query(User).filter(User.phone_number == phone_number).first()
+    if not user or not verify_password(payload.password, user.password_hash):
+        raise HTTPException(status_code=401, detail='Invalid phone or password')
+    return issue_session_tokens(db, user, payload.device_name)
