@@ -1,6 +1,6 @@
 .venv/
 __pycache__/
 *.pyc
-aurora.db
+izvestnick.db
 media/
 .env
