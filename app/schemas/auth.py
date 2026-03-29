@@ -12,6 +12,7 @@ class RegisterRequest(BaseModel):
 class CompleteProfileRequest(BaseModel):
     first_name: str = Field(min_length=1, max_length=100)
     last_name: str = Field(min_length=1, max_length=100)
+    username_link: Optional[str] = Field(default=None, max_length=64)
 
 
 class LoginRequest(BaseModel):
