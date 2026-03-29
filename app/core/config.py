@@ -5,7 +5,7 @@ from typing import List
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
 
-    APP_NAME: str = 'Aurora Messenger API'
+    APP_NAME: str = 'IzvestNick'
     API_V1_PREFIX: str = '/api/v1'
     SECRET_KEY: str = 'CHANGE_ME_TO_LONG_RANDOM_SECRET'
     JWT_ALG: str = 'HS256'
