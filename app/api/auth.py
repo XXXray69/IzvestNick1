@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, Form, HTTPException
 from sqlalchemy.orm import Session
+import random
+import string
 
 from app.core.db import get_db
 from app.core.security import hash_password, verify_password
@@ -9,6 +11,15 @@ from app.schemas.user import UserOut
 from app.services.auth_service import issue_session_tokens, normalize_phone
 
 router = APIRouter(prefix='/auth', tags=['auth'])
+
+
+def generate_unique_username_link(db: Session) -> str:
+    alphabet = string.ascii_lowercase + string.digits
+    while True:
+        candidate = '@' + ''.join(random.choice(alphabet) for _ in range(9))
+        exists = db.query(User).filter(User.username_link == candidate).first()
+        if not exists:
+            return candidate
 
 
 @router.post('/register')
@@ -35,12 +46,21 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
 
 
 @router.post('/complete-profile', response_model=UserOut)
-def complete_profile(payload: CompleteProfileRequest, user_id: int = Form(...), db: Session = Depends(get_db)):
+def complete_profile(
+    payload: CompleteProfileRequest,
+    user_id: int = Form(...),
+    db: Session = Depends(get_db)
+):
     user = db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail='User not found')
+
     user.first_name = payload.first_name
     user.last_name = payload.last_name
+
+    if not user.username_link:
+        user.username_link = generate_unique_username_link(db)
+
     db.commit()
     db.refresh(user)
     return user
