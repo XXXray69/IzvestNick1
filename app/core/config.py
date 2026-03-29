@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     JWT_ALG: str = 'HS256'
     ACCESS_TOKEN_MINUTES: int = 30
     REFRESH_TOKEN_DAYS: int = 30
-    DATABASE_URL: str = 'sqlite:///./aurora.db'
+    DATABASE_URL: str = 'sqlite:///./izvestnick.db'
     CORS_ORIGINS: str = 'http://localhost:3000,http://127.0.0.1:3000'
     MEDIA_DIR: str = './media'
     MAX_PROFILE_PHOTOS: int = 30
