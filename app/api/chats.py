@@ -12,11 +12,36 @@ from app.schemas.chat import ChatOut, CreateDirectChatRequest
 router = APIRouter(prefix='/chats', tags=['chats'])
 
 
+def normalize_username_link(value: str | None) -> str | None:
+    if value is None:
+        return None
+    value = value.strip().lower()
+    if not value:
+        return None
+    if not value.startswith('@'):
+        value = '@' + value
+    return value
+
+
 @router.post('/direct', response_model=ChatOut)
-def create_direct_chat(payload: CreateDirectChatRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    other = db.get(User, payload.user_id)
+def create_direct_chat(
+    payload: CreateDirectChatRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    other = None
+
+    if payload.user_id is not None:
+        other = db.get(User, payload.user_id)
+    elif payload.username_link:
+        username_link = normalize_username_link(payload.username_link)
+        other = db.query(User).filter(User.username_link == username_link).first()
+
     if not other:
         raise HTTPException(status_code=404, detail='Target user not found')
+
+    if other.id == current_user.id:
+        raise HTTPException(status_code=400, detail='You cannot create a chat with yourself')
 
     candidate_chats = db.query(Chat).filter(Chat.is_direct == True).all()
     for chat in candidate_chats:
@@ -38,7 +63,12 @@ def list_chats(current_user: User = Depends(get_current_user)):
 
 
 @router.delete('/{chat_id}')
-def delete_chat(chat_id: int, delete_for_everyone: bool = False, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def delete_chat(
+    chat_id: int,
+    delete_for_everyone: bool = False,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     chat = db.get(Chat, chat_id)
     if not chat or current_user.id not in {m.id for m in chat.members}:
         raise HTTPException(status_code=404, detail='Chat not found')
