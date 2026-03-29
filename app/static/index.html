@@ -13,6 +13,7 @@
     input,button,textarea,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #d1d5db;box-sizing:border-box;font-size:14px}
     button{cursor:pointer;background:#111827;color:#fff;border:none}
     button.secondary{background:#eef2ff;color:#111827}
+    button.ghost{background:#fff;color:#111827;border:1px solid #d1d5db}
     .stack{display:flex;flex-direction:column;gap:10px}
     .row{display:flex;gap:8px}
     .row>*{flex:1}
@@ -26,6 +27,12 @@
     .small{font-size:12px;color:#6b7280}
     .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .pill{padding:6px 10px;background:#eef2ff;border-radius:999px;display:inline-block;font-size:12px}
+    .auth-shell{max-width:560px;margin:40px auto}
+    .center-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .title-main{font-size:28px;font-weight:700;margin-bottom:8px}
+    .subtitle{font-size:13px;color:#6b7280;margin-bottom:18px}
+    .label{font-size:13px;font-weight:600;margin-bottom:4px}
+    .status-box{min-height:20px}
     @media (max-width: 900px){.grid{grid-template-columns:1fr;height:auto}.msgs{height:40vh}}
   </style>
 </head>
@@ -33,49 +40,75 @@
 <div class="wrap">
   <div class="topbar">
     <div>
-      <h1>IzvestNick</h1>
-      <div class="small">Быстрый веб-клиент для теста backend на Render</div>
+      <div class="title-main">IzvestNick</div>
+      <div class="subtitle">Быстрый веб-клиент для теста backend на Render</div>
     </div>
     <div class="pill" id="statusPill">Не авторизован</div>
   </div>
 
-  <div id="authView" class="grid" style="grid-template-columns:1fr 1fr;">
+  <!-- AUTH -->
+  <div id="authView" class="auth-shell">
     <div class="card stack">
-      <h2>Вход</h2>
-      <input id="loginPhone" placeholder="Номер телефона, например 9991234567" />
-      <input id="loginPassword" type="password" placeholder="Пароль" />
-      <button onclick="login()">Войти</button>
-      <div class="small" id="loginResult"></div>
-    </div>
-    <div class="card stack">
-      <h2>Создать аккаунт</h2>
-      <div class="row">
-        <select id="regPrefix">
-          <option>+7</option><option>+1</option><option>+44</option><option>+49</option><option>+33</option><option>+81</option>
-        </select>
-        <input id="regPhone" placeholder="Номер" />
+      <div id="authStepPhone" class="stack">
+        <h2>Вход или регистрация</h2>
+        <div class="label">Номер телефона</div>
+        <input id="entryPhone" placeholder="Например 9991234567" />
+        <div class="center-actions">
+          <button class="secondary" onclick="goToRegister()">Регистрация</button>
+          <button onclick="goToLoginPassword()">Вход</button>
+        </div>
+        <div id="entryResult" class="small status-box"></div>
       </div>
-      <input id="regPassword" type="password" placeholder="Пароль" />
-      <input id="regPassword2" type="password" placeholder="Подтвердить пароль" />
-      <button onclick="register()">Создать аккаунт</button>
-      <div class="small" id="registerResult"></div>
-      <hr style="width:100%;border:none;border-top:1px solid #e5e7eb"/>
-      <h3>После регистрации</h3>
-      <input id="profileUserId" placeholder="user_id из ответа регистрации" />
-      <div class="row">
-        <input id="firstName" placeholder="Имя" />
-        <input id="lastName" placeholder="Фамилия" />
+
+      <div id="authStepLoginPassword" class="stack hidden">
+        <h2>Вход</h2>
+        <div class="small" id="loginPhonePreview"></div>
+        <input id="loginPassword" type="password" placeholder="Пароль" />
+        <div class="center-actions">
+          <button class="ghost" onclick="goToEntry()">Назад</button>
+          <button onclick="login()">ОК</button>
+        </div>
+        <div id="loginResult" class="small status-box"></div>
       </div>
-      <button class="secondary" onclick="completeProfile()">Сохранить имя и фамилию</button>
-      <div class="small" id="profileResult"></div>
+
+      <div id="authStepRegister" class="stack hidden">
+        <h2>Регистрация</h2>
+        <div class="row">
+          <select id="regPrefix">
+            <option>+7</option>
+            <option>+1</option>
+            <option>+44</option>
+            <option>+49</option>
+            <option>+33</option>
+            <option>+81</option>
+            <option>+86</option>
+            <option>+91</option>
+            <option>+971</option>
+          </select>
+          <input id="regPhone" placeholder="Номер" />
+        </div>
+        <input id="regPassword" type="password" placeholder="Пароль" />
+        <input id="regPassword2" type="password" placeholder="Подтвердить пароль" />
+        <div class="row">
+          <input id="firstName" placeholder="Имя" />
+          <input id="lastName" placeholder="Фамилия" />
+        </div>
+        <div class="center-actions">
+          <button class="ghost" onclick="goToEntry()">Назад</button>
+          <button onclick="registerFull()">Создать аккаунт</button>
+        </div>
+        <div id="registerResult" class="small status-box"></div>
+      </div>
     </div>
   </div>
 
+  <!-- APP -->
   <div id="appView" class="grid hidden">
     <div class="card stack">
       <div>
         <h2>Чаты</h2>
         <div class="small" id="meInfo"></div>
+        <div class="small" id="myLinkInfo"></div>
       </div>
       <button class="secondary" onclick="loadChats()">Обновить список чатов</button>
       <div class="row">
@@ -103,141 +136,281 @@
     </div>
   </div>
 </div>
+
 <script>
 const api = '/api/v1';
 let token = localStorage.getItem('access_token') || '';
 let currentChatId = null;
 let ws = null;
+let cachedMe = null;
 
-async function apiFetch(path, options={}) {
+async function apiFetch(path, options = {}) {
   const headers = options.headers || {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  if (!(options.body instanceof FormData) && !headers['Content-Type']) headers['Content-Type']='application/json';
-  const res = await fetch(path, {...options, headers});
+  if (!(options.body instanceof FormData) && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+
+  const res = await fetch(path, { ...options, headers });
   const text = await res.text();
   let data;
-  try { data = text ? JSON.parse(text) : {}; } catch { data = {raw:text}; }
-  if (!res.ok) throw new Error(data.detail || data.raw || res.statusText);
+  try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+
+  if (!res.ok) {
+    const detail = typeof data?.detail === 'string'
+      ? data.detail
+      : data?.detail
+        ? JSON.stringify(data.detail)
+        : data?.raw || res.statusText;
+    throw new Error(detail);
+  }
+
   return data;
 }
 
-function setStatus(text){ document.getElementById('statusPill').textContent=text; }
-function showApp(show){ document.getElementById('authView').classList.toggle('hidden', show); document.getElementById('appView').classList.toggle('hidden', !show); }
-
-async function register(){
-  try{
-    const data = await apiFetch(`${api}/auth/register`, {method:'POST', body: JSON.stringify({
-      phone_prefix: regPrefix.value, phone_number: regPhone.value, password: regPassword.value, confirm_password: regPassword2.value
-    })});
-    registerResult.textContent = 'Успех. user_id = ' + data.user_id;
-    profileUserId.value = data.user_id;
-  }catch(e){ registerResult.textContent = e.message; }
+function setStatus(text) { document.getElementById('statusPill').textContent = text; }
+function showApp(show) {
+  document.getElementById('authView').classList.toggle('hidden', show);
+  document.getElementById('appView').classList.toggle('hidden', !show);
+}
+function hideAllAuthSteps() {
+  authStepPhone.classList.add('hidden');
+  authStepLoginPassword.classList.add('hidden');
+  authStepRegister.classList.add('hidden');
+}
+function goToEntry() {
+  hideAllAuthSteps();
+  authStepPhone.classList.remove('hidden');
+  entryResult.textContent = '';
+  loginResult.textContent = '';
+  registerResult.textContent = '';
+}
+function goToLoginPassword() {
+  if (!entryPhone.value.trim()) {
+    entryResult.textContent = 'Сначала введи номер телефона';
+    return;
+  }
+  hideAllAuthSteps();
+  authStepLoginPassword.classList.remove('hidden');
+  loginPhonePreview.textContent = 'Номер: ' + entryPhone.value.trim();
+  loginResult.textContent = '';
+}
+function goToRegister() {
+  if (entryPhone.value.trim()) regPhone.value = entryPhone.value.trim();
+  hideAllAuthSteps();
+  authStepRegister.classList.remove('hidden');
+  registerResult.textContent = '';
 }
 
-async function completeProfile(){
-  try{
+async function registerFull() {
+  try {
+    registerResult.textContent = '';
+
+    const phone = regPhone.value.trim();
+    const prefix = regPrefix.value;
+    const password = regPassword.value;
+    const confirm = regPassword2.value;
+    const first = firstName.value.trim();
+    const last = lastName.value.trim();
+
+    if (!phone || !password || !confirm || !first || !last) {
+      throw new Error('Заполни все поля');
+    }
+
+    const regData = await apiFetch(`${api}/auth/register`, {
+      method: 'POST',
+      body: JSON.stringify({
+        phone_prefix: prefix,
+        phone_number: phone,
+        password: password,
+        confirm_password: confirm
+      })
+    });
+
     const fd = new FormData();
-    fd.append('user_id', profileUserId.value);
-    fd.append('first_name', firstName.value);
-    fd.append('last_name', lastName.value);
-    const res = await fetch(`${api}/auth/complete-profile`, {method:'POST', body: fd});
-    const data = await res.json();
-    if(!res.ok) throw new Error(data.detail || 'Ошибка');
-    profileResult.textContent = `Профиль сохранён: ${data.first_name} ${data.last_name}`;
-  }catch(e){ profileResult.textContent = e.message; }
-}
+    fd.append('user_id', regData.user_id);
+    fd.append('first_name', first);
+    fd.append('last_name', last);
 
-async function login(){
-  try{
-    const data = await apiFetch(`${api}/auth/login`, {method:'POST', body: JSON.stringify({
-      phone_number: loginPhone.value, password: loginPassword.value, device_name: 'Browser'
-    })});
-    token = data.access_token;
+    const profileRes = await fetch(`${api}/auth/complete-profile`, { method: 'POST', body: fd });
+    const profileData = await profileRes.json();
+    if (!profileRes.ok) throw new Error(profileData.detail || 'Ошибка сохранения профиля');
+
+    const loginData = await apiFetch(`${api}/auth/login`, {
+      method: 'POST',
+      body: JSON.stringify({
+        phone_number: phone,
+        password: password,
+        device_name: 'Browser'
+      })
+    });
+
+    token = loginData.access_token;
     localStorage.setItem('access_token', token);
+
     setStatus('Авторизован');
     showApp(true);
     await loadMe();
     await loadChats();
-  }catch(e){ loginResult.textContent = e.message; }
+  } catch (e) {
+    registerResult.textContent = e.message;
+  }
 }
 
-async function loadMe(){
-  try{ const me = await apiFetch(`${api}/users/me`); meInfo.textContent = `${me.first_name} ${me.last_name} · ${me.phone_prefix}${me.phone_number}`; }
-  catch(e){ meInfo.textContent = e.message; }
+async function login() {
+  try {
+    loginResult.textContent = '';
+    const phone = entryPhone.value.trim();
+    const password = loginPassword.value;
+
+    if (!phone || !password) throw new Error('Введи номер и пароль');
+
+    const data = await apiFetch(`${api}/auth/login`, {
+      method: 'POST',
+      body: JSON.stringify({
+        phone_number: phone,
+        password: password,
+        device_name: 'Browser'
+      })
+    });
+
+    token = data.access_token;
+    localStorage.setItem('access_token', token);
+
+    setStatus('Авторизован');
+    showApp(true);
+    await loadMe();
+    await loadChats();
+  } catch (e) {
+    loginResult.textContent = e.message;
+  }
 }
 
-async function loadChats(){
-  try{
+async function loadMe() {
+  try {
+    const me = await apiFetch(`${api}/users/me`);
+    cachedMe = me;
+    meInfo.textContent = `${me.first_name} ${me.last_name} · ${me.phone_prefix}${me.phone_number}`;
+    myLinkInfo.textContent = me.username_link ? `ID: ${me.username_link}` : '';
+  } catch (e) {
+    meInfo.textContent = e.message;
+    myLinkInfo.textContent = '';
+  }
+}
+
+async function loadChats() {
+  try {
     const chats = await apiFetch(`${api}/chats`);
     chatList.innerHTML = '';
     chats.forEach(c => {
       const item = document.createElement('div');
-      item.className = 'chat-item' + (currentChatId===c.id ? ' active':'');
-      const names = (c.members||[]).map(m => `${m.first_name} ${m.last_name}`.trim()).join(', ');
+      item.className = 'chat-item' + (currentChatId === c.id ? ' active' : '');
+      const names = (c.members || []).map(m => `${m.first_name} ${m.last_name}`.trim()).join(', ');
       item.innerHTML = `<strong>${c.title || (c.is_direct ? 'Личный чат' : 'Чат')}</strong><div class="small">${names}</div><div class="small">ID: ${c.id}</div>`;
-      item.onclick = () => openChat(c.id, names || ('Chat '+c.id));
+      item.onclick = () => openChat(c.id, names || ('Chat ' + c.id));
       chatList.appendChild(item);
     });
-  }catch(e){ chatList.innerHTML = `<div class="small">${e.message}</div>`; }
+  } catch (e) {
+    chatList.innerHTML = `<div class="small">${e.message}</div>`;
+  }
 }
 
-async function createDirectChat(){
-  try{
-    await apiFetch(`${api}/chats/direct`, {method:'POST', body: JSON.stringify({user_id: Number(targetUserId.value)})});
+async function createDirectChat() {
+  try {
+    const raw = targetUserId.value.trim();
+    const numericId = Number(raw);
+    if (!raw || Number.isNaN(numericId)) {
+      throw new Error('Сейчас нужно вводить числовой user_id');
+    }
+
+    await apiFetch(`${api}/chats/direct`, {
+      method: 'POST',
+      body: JSON.stringify({ user_id: numericId })
+    });
+    targetUserId.value = '';
     await loadChats();
-  }catch(e){ alert(e.message); }
+  } catch (e) {
+    alert(e.message);
+  }
 }
 
-async function openChat(id, title){
+async function openChat(id, title) {
   currentChatId = id;
-  chatTitle.textContent = title || ('Chat '+id);
+  chatTitle.textContent = title || ('Chat ' + id);
   chatMeta.textContent = 'chat_id: ' + id;
   await loadChats();
   await loadMessages();
   connectWs(id);
 }
 
-async function loadMessages(){
-  if(!currentChatId) return;
-  try{
+async function loadMessages() {
+  if (!currentChatId) return;
+  try {
     const msgs = await apiFetch(`${api}/messages/${currentChatId}`);
+    if (!cachedMe) await loadMe();
+
     messages.innerHTML = '';
     msgs.forEach(m => {
       const div = document.createElement('div');
-      div.className = 'msg ' + (m.sender_id ? 'them':'' );
-      apiFetch(`${api}/users/me`).then(me => { if (m.sender_id === me.id) div.className = 'msg me'; else div.className = 'msg them'; }).catch(()=>{});
+      div.className = 'msg ' + (cachedMe && m.sender_id === cachedMe.id ? 'me' : 'them');
       div.innerHTML = `<div>${escapeHtml(m.body)}</div><div class="small">message_id: ${m.id}</div>`;
       messages.appendChild(div);
     });
     messages.scrollTop = messages.scrollHeight;
-  }catch(e){ messages.innerHTML = `<div class="small">${e.message}</div>`; }
+  } catch (e) {
+    messages.innerHTML = `<div class="small">${e.message}</div>`;
+  }
 }
 
-async function sendMessage(){
-  if(!currentChatId) return alert('Сначала выбери чат');
-  try{
-    await apiFetch(`${api}/messages/${currentChatId}`, {method:'POST', body: JSON.stringify({body: messageText.value})});
-    messageText.value='';
+async function sendMessage() {
+  if (!currentChatId) return alert('Сначала выбери чат');
+  try {
+    await apiFetch(`${api}/messages/${currentChatId}`, {
+      method: 'POST',
+      body: JSON.stringify({ body: messageText.value })
+    });
+    messageText.value = '';
     await loadMessages();
-  }catch(e){ alert(e.message); }
+  } catch (e) {
+    alert(e.message);
+  }
 }
 
-function connectWs(chatId){
-  if(ws) ws.close();
+function connectWs(chatId) {
+  if (ws) ws.close();
   const proto = location.protocol === 'https:' ? 'wss' : 'ws';
   ws = new WebSocket(`${proto}://${location.host}/ws/chats/${chatId}`);
   ws.onmessage = (event) => {
-    try{
+    try {
       const data = JSON.parse(event.data);
-      if(data.event === 'new_message' || data.event === 'message_deleted') loadMessages();
-    }catch{}
+      if (data.event === 'new_message' || data.event === 'message_deleted') loadMessages();
+    } catch {}
   };
 }
 
-function logout(){ localStorage.removeItem('access_token'); token=''; currentChatId=null; if(ws) ws.close(); setStatus('Не авторизован'); showApp(false); }
-function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function logout() {
+  localStorage.removeItem('access_token');
+  token = '';
+  cachedMe = null;
+  currentChatId = null;
+  if (ws) ws.close();
+  setStatus('Не авторизован');
+  showApp(false);
+  goToEntry();
+}
 
-if(token){ setStatus('Авторизован'); showApp(true); loadMe(); loadChats(); }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+if (token) {
+  setStatus('Авторизован');
+  showApp(true);
+  loadMe();
+  loadChats();
+} else {
+  setStatus('Не авторизован');
+  showApp(false);
+  goToEntry();
+}
 </script>
 </body>
 </html>
