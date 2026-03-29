@@ -6,7 +6,7 @@ const tData = {
     russian: "Русский",
     english: "English",
     createAccount: "Создать аккаунт",
-    loginTitle: "Ваш новый мессенджер",
+    loginTitle: "IzvestNick",
     phone: "Номер телефона",
     password: "Пароль",
     confirmPassword: "Подтвердите пароль",
@@ -38,7 +38,7 @@ const tData = {
     russian: "Русский",
     english: "English",
     createAccount: "Create account",
-    loginTitle: "Your new messenger",
+    loginTitle: "IzvestNick",
     phone: "Phone number",
     password: "Password",
     confirmPassword: "Confirm password",
@@ -98,7 +98,7 @@ export default function MessengerWebMVP() {
   const [surname, setSurname] = useState("");
   const [selectedChatId, setSelectedChatId] = useState(1);
   const [message, setMessage] = useState("");
-  const [profileLink, setProfileLink] = useState("@aurora_link");
+  const [profileLink, setProfileLink] = useState("@izvestnick");
   const [chats, setChats] = useState(seedChats);
   const t = tData[lang];
 
