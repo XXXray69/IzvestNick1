@@ -5,78 +5,236 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IzvestNick</title>
   <style>
-    body{font-family:Arial,sans-serif;margin:0;background:#f3f5fb;color:#111827}
-    .wrap{max-width:1200px;margin:0 auto;padding:20px}
-    .grid{display:grid;grid-template-columns:340px 1fr;gap:16px;height:calc(100vh - 40px)}
-    .card{background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:16px;overflow:hidden}
-    h1,h2,h3{margin:0 0 12px}
-    input,button,textarea,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #d1d5db;box-sizing:border-box;font-size:14px}
-    button{cursor:pointer;background:#111827;color:#fff;border:none}
-    button.secondary{background:#eef2ff;color:#111827}
-    button.ghost{background:#fff;color:#111827;border:1px solid #d1d5db}
-    button.danger{background:#991b1b;color:#fff}
-    .stack{display:flex;flex-direction:column;gap:10px}
-    .row{display:flex;gap:8px}
+    :root{
+      --bg:#edf7f7;
+      --panel:#ffffffcc;
+      --panel-strong:#ffffff;
+      --line:#cfe6e6;
+      --text:#103234;
+      --muted:#56787a;
+      --accent:#1bb8b6;
+      --accent-2:#0d8f8d;
+      --accent-soft:#ddf6f5;
+      --danger:#b42318;
+      --shadow:0 18px 40px rgba(17, 52, 53, .10);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(27,184,182,.14), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(13,143,141,.12), transparent 30%),
+        linear-gradient(180deg,#f4fbfb 0%, #eaf5f5 100%);
+    }
+
+    .shell{max-width:1480px;margin:0 auto;padding:18px}
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      gap:16px;margin-bottom:16px
+    }
+    .brand h1{margin:0;font-size:42px;letter-spacing:-1px}
+    .brand p{margin:6px 0 0;color:var(--muted);font-size:14px}
+    .status-pill{
+      padding:10px 14px;border-radius:999px;background:var(--panel-strong);
+      border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px
+    }
+
+    .auth-wrap{max-width:620px;margin:28px auto}
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,.7);
+      backdrop-filter:blur(18px);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .stack{display:flex;flex-direction:column;gap:12px}
+    .row{display:flex;gap:10px}
     .row>*{flex:1}
-    .hidden{display:none}
-    .chat-item{padding:12px;border-radius:14px;background:#f9fafb;cursor:pointer;border:1px solid transparent}
-    .chat-item.active{background:#eef2ff;border-color:#c7d2fe}
-    .msgs{height:58vh;overflow:auto;background:#f9fafb;border-radius:16px;padding:12px}
-    .msg{max-width:70%;padding:10px 12px;border-radius:16px;margin:8px 0}
-    .msg.me{background:#111827;color:#fff;margin-left:auto}
-    .msg.them{background:#e5e7eb;color:#111827}
-    .small{font-size:12px;color:#6b7280;white-space:pre-wrap;word-break:break-word}
-    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .pill{padding:6px 10px;background:#eef2ff;border-radius:999px;display:inline-block;font-size:12px}
-    .auth-shell{max-width:560px;margin:40px auto}
-    .center-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .title-main{font-size:28px;font-weight:700;margin-bottom:8px}
-    .subtitle{font-size:13px;color:#6b7280;margin-bottom:18px}
-    .label{font-size:13px;font-weight:600;margin-bottom:4px}
-    .status-box{min-height:22px}
-    .profile-box{padding:12px;border-radius:16px;background:#f9fafb;border:1px solid #e5e7eb}
-    .profile-line{font-size:14px;margin:4px 0}
-    @media (max-width: 900px){.grid{grid-template-columns:1fr;height:auto}.msgs{height:40vh}}
+    .hidden{display:none!important}
+
+    h2,h3{margin:0 0 6px}
+    .helper{font-size:12px;color:var(--muted);line-height:1.45}
+    .field{
+      width:100%;padding:14px 16px;border-radius:16px;border:1px solid var(--line);
+      background:#fff;color:var(--text);outline:none;font-size:15px
+    }
+    .field:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(27,184,182,.12)}
+
+    .btn{
+      width:100%;padding:14px 16px;border:none;border-radius:16px;cursor:pointer;
+      font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff
+    }
+    .btn.secondary{
+      background:var(--accent-soft);color:var(--text);border:1px solid var(--line)
+    }
+    .btn.ghost{
+      background:#fff;color:var(--text);border:1px solid var(--line)
+    }
+    .btn.danger{
+      background:linear-gradient(135deg,#d94d42,#b42318);color:#fff
+    }
+
+    .status-box{
+      min-height:20px;font-size:13px;color:var(--muted);white-space:pre-wrap;word-break:break-word
+    }
+
+    .app-grid{
+      display:grid;
+      grid-template-columns:330px minmax(0, 1fr) 320px;
+      gap:16px;
+      min-height:calc(100vh - 110px);
+    }
+
+    .left,.center,.right{
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,.7);
+      backdrop-filter:blur(18px);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+
+    .profile-card{
+      background:linear-gradient(135deg,#ffffff,#f1fbfb);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px;
+      margin-bottom:14px;
+    }
+    .profile-name{font-size:24px;font-weight:800;margin-bottom:6px}
+    .profile-line{font-size:14px;margin:4px 0;color:var(--muted)}
+
+    .left-section-title,
+    .center-title,
+    .right-title{
+      font-size:26px;font-weight:800;margin:2px 0 10px
+    }
+
+    .chat-search{
+      margin-bottom:10px
+    }
+
+    .chat-list{
+      display:flex;flex-direction:column;gap:10px;
+      max-height:430px;overflow:auto;margin-top:8px
+    }
+
+    .chat-item{
+      padding:14px;border-radius:18px;background:#fff;border:1px solid var(--line);
+      cursor:pointer;transition:.15s ease;
+    }
+    .chat-item:hover{transform:translateY(-1px)}
+    .chat-item.active{
+      background:linear-gradient(135deg,#e7fbfa,#f4ffff);
+      border-color:var(--accent);
+      box-shadow:0 8px 18px rgba(27,184,182,.10)
+    }
+    .chat-item strong{display:block;margin-bottom:4px}
+    .small{font-size:12px;color:var(--muted)}
+
+    .hero-panel{
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at top left, rgba(27,184,182,.10), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(13,143,141,.08), transparent 28%),
+        linear-gradient(180deg,#ffffff 0%, #f6fbfb 100%);
+      min-height:430px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .chat-head{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      padding-bottom:12px;border-bottom:1px solid var(--line)
+    }
+    .chat-head-meta h3{margin:0;font-size:24px}
+    .chat-head-meta p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .messages{
+      flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px
+    }
+
+    .msg{
+      max-width:76%;
+      padding:12px 14px;border-radius:18px;
+      font-size:14px;line-height:1.45;
+      border:1px solid var(--line)
+    }
+    .msg.me{
+      margin-left:auto;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#fff;border:none
+    }
+    .msg.them{
+      background:#fff;color:var(--text)
+    }
+
+    .composer{
+      display:flex;flex-direction:column;gap:10px
+    }
+    textarea.field{
+      min-height:84px;resize:vertical
+    }
+
+    .right-block{
+      background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px
+    }
+    .right-block h4{margin:0 0 10px;font-size:18px}
+    .action-note{font-size:13px;color:var(--muted);line-height:1.45}
+
+    @media (max-width: 1150px){
+      .app-grid{grid-template-columns:1fr}
+      .left,.center,.right{min-height:auto}
+    }
   </style>
 </head>
 <body>
-<div class="wrap">
+<div class="shell">
   <div class="topbar">
-    <div>
-      <div class="title-main">IzvestNick</div>
-      <div class="subtitle">Быстрый веб-клиент для теста backend на Render</div>
+    <div class="brand">
+      <h1>IzvestNick</h1>
+      <p>Бирюзовый веб-мессенджер для теста backend на Render</p>
     </div>
-    <div class="pill" id="statusPill">Не авторизован</div>
+    <div class="status-pill" id="statusPill">Не авторизован</div>
   </div>
 
-  <div id="authView" class="auth-shell">
+  <div id="authView" class="auth-wrap">
     <div class="card stack">
       <div id="authStepPhone" class="stack">
         <h2>Вход или регистрация</h2>
-        <div class="label">Номер телефона</div>
-        <input id="entryPhone" placeholder="Например 9991234567" />
-        <div class="center-actions">
-          <button class="secondary" onclick="goToRegister()">Регистрация</button>
-          <button onclick="goToLoginPassword()">Вход</button>
+        <div class="helper">Сначала введи номер телефона, затем выбери действие.</div>
+        <input id="entryPhone" class="field" placeholder="Например 9991234567" />
+        <div class="row">
+          <button class="btn secondary" onclick="goToRegister()">Регистрация</button>
+          <button class="btn" onclick="goToLoginPassword()">Вход</button>
         </div>
-        <div id="entryResult" class="small status-box"></div>
+        <div id="entryResult" class="status-box"></div>
       </div>
 
       <div id="authStepLoginPassword" class="stack hidden">
         <h2>Вход</h2>
-        <div class="small" id="loginPhonePreview"></div>
-        <input id="loginPassword" type="password" placeholder="Пароль" />
-        <div class="center-actions">
-          <button class="ghost" onclick="goToEntry()">Назад</button>
-          <button onclick="login()">ОК</button>
+        <div class="helper" id="loginPhonePreview"></div>
+        <input id="loginPassword" class="field" type="password" placeholder="Пароль" />
+        <div class="row">
+          <button class="btn ghost" onclick="goToEntry()">Назад</button>
+          <button class="btn" onclick="login()">ОК</button>
         </div>
-        <div id="loginResult" class="small status-box"></div>
+        <div id="loginResult" class="status-box"></div>
       </div>
 
       <div id="authStepRegister" class="stack hidden">
         <h2>Регистрация</h2>
         <div class="row">
-          <select id="regPrefix">
+          <select id="regPrefix" class="field">
             <option>+7</option>
             <option>+1</option>
             <option>+44</option>
@@ -87,63 +245,90 @@
             <option>+91</option>
             <option>+971</option>
           </select>
-          <input id="regPhone" placeholder="Номер" />
+          <input id="regPhone" class="field" placeholder="Номер" />
         </div>
-        <input id="regPassword" type="password" placeholder="Пароль" />
-        <input id="regPassword2" type="password" placeholder="Подтвердить пароль" />
+        <input id="regPassword" class="field" type="password" placeholder="Пароль" />
+        <input id="regPassword2" class="field" type="password" placeholder="Подтвердить пароль" />
         <div class="row">
-          <input id="firstName" placeholder="Имя" />
-          <input id="lastName" placeholder="Фамилия" />
+          <input id="firstName" class="field" placeholder="Имя" />
+          <input id="lastName" class="field" placeholder="Фамилия" />
         </div>
-        <input id="usernameLink" placeholder="ID, например @329rfwmf9" />
-        <div class="small">ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.</div>
-        <div class="center-actions">
-          <button class="ghost" onclick="goToEntry()">Назад</button>
-          <button onclick="registerFull()">Создать аккаунт</button>
+        <input id="usernameLink" class="field" placeholder="ID, например @329rfwmf9" />
+        <div class="helper">ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.</div>
+        <div class="row">
+          <button class="btn ghost" onclick="goToEntry()">Назад</button>
+          <button class="btn" onclick="registerFull()">Создать аккаунт</button>
         </div>
-        <div id="registerResult" class="small status-box"></div>
+        <div id="registerResult" class="status-box"></div>
       </div>
     </div>
   </div>
 
-  <div id="appView" class="grid hidden">
-    <div class="card stack">
-      <div class="profile-box">
-        <h2>Профиль</h2>
-        <div class="profile-line" id="meName">—</div>
+  <div id="appView" class="app-grid hidden">
+    <aside class="left">
+      <div class="profile-card">
+        <div class="profile-name" id="meName">—</div>
         <div class="profile-line" id="mePhone">—</div>
         <div class="profile-line" id="myLinkInfo">—</div>
       </div>
 
-      <div>
-        <h2>Чаты</h2>
-      </div>
-      <button class="secondary" onclick="loadChats()">Обновить список чатов</button>
-      <div class="row">
-        <input id="targetUserId" placeholder="@id или числовой user_id" />
-        <button onclick="createDirectChat()">Создать чат</button>
-      </div>
-      <div id="chatList" class="stack"></div>
-      <button onclick="logout()">Выйти</button>
-      <button class="danger" onclick="deleteMyAccount()">Удалить мой аккаунт</button>
-      <button class="ghost" onclick="resetAllDemoData()">Очистить все тестовые регистрации</button>
-    </div>
+      <div class="left-section-title">Чаты</div>
 
-    <div class="card stack">
-      <div>
-        <h2 id="chatTitle">Выбери чат</h2>
-        <div class="small" id="chatMeta"></div>
+      <div class="chat-search">
+        <input id="targetUserId" class="field" placeholder="@id или числовой user_id" />
       </div>
-      <div id="messages" class="msgs"></div>
-      <div class="row">
-        <textarea id="messageText" placeholder="Напиши сообщение" rows="3"></textarea>
+
+      <div class="row" style="margin-bottom:10px">
+        <button class="btn" onclick="createDirectChat()">Создать чат</button>
+        <button class="btn secondary" onclick="loadChats()">Обновить</button>
       </div>
-      <div class="row">
-        <button onclick="sendMessage()">Отправить</button>
-        <button class="secondary" onclick="loadMessages()">Обновить сообщения</button>
+
+      <div id="chatList" class="chat-list"></div>
+    </aside>
+
+    <main class="center">
+      <div class="hero-panel">
+        <div class="chat-head">
+          <div class="chat-head-meta">
+            <h3 id="chatTitle">Выбери чат</h3>
+            <p id="chatMeta">Открой существующий чат или создай новый по @ID</p>
+          </div>
+        </div>
+
+        <div id="messages" class="messages"></div>
+
+        <div class="composer">
+          <textarea id="messageText" class="field" placeholder="Напиши сообщение"></textarea>
+          <div class="row">
+            <button class="btn" onclick="sendMessage()">Отправить</button>
+            <button class="btn secondary" onclick="loadMessages()">Обновить сообщения</button>
+          </div>
+        </div>
       </div>
-      <div class="small">Можно искать пользователя по его ID, например @sozdatel1.</div>
-    </div>
+    </main>
+
+    <aside class="right">
+      <div class="right-title">Действия</div>
+
+      <div class="right-block" style="margin-bottom:12px">
+        <h4>Профиль</h4>
+        <div class="action-note">После регистрации ты сразу попадаешь сюда. Слева отображаются имя, номер и ID.</div>
+      </div>
+
+      <div class="right-block" style="margin-bottom:12px">
+        <h4>Тестовые данные</h4>
+        <div class="stack">
+          <button class="btn ghost" onclick="logout()">Выйти</button>
+          <button class="btn danger" onclick="deleteMyAccount()">Удалить мой аккаунт</button>
+          <button class="btn secondary" onclick="resetAllDemoData()">Очистить все тестовые регистрации</button>
+        </div>
+      </div>
+
+      <div class="right-block">
+        <h4>Подсказка</h4>
+        <div class="action-note">Можно находить пользователя по его ID, например <b>@sozdatel1</b>. Также поддерживается ввод числового <b>user_id</b>.</div>
+      </div>
+    </aside>
   </div>
 </div>
 
@@ -183,7 +368,6 @@ async function apiFetch(path, options = {}) {
 
   const res = await fetch(path, { ...options, headers });
   const data = await parseResponse(res);
-
   if (!res.ok) throw new Error(extractError(data, res.statusText));
   return data;
 }
