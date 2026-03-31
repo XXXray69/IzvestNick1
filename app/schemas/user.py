@@ -17,5 +17,7 @@ class UserOut(BaseModel):
 
 
 class SetProfileRequest(BaseModel):
+    first_name: Optional[str] = Field(default=None, max_length=100)
+    last_name: Optional[str] = Field(default=None, max_length=100)
     username_link: Optional[str] = Field(default=None, max_length=64)
     bio: Optional[str] = Field(default=None, max_length=300)
