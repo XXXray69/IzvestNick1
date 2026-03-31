@@ -433,6 +433,8 @@
       font-size:13px;
       color:var(--muted);
       line-height:1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
     }
 
     .lang-switch{
@@ -482,8 +484,8 @@
         <div class="helper" id="entryHint">Сначала введи номер телефона, затем выбери действие.</div>
         <input id="entryPhone" class="field" placeholder="Например 9991234567" />
         <div class="row">
-          <button class="btn secondary" onclick="goToRegister()" id="registerBtnTop">Регистрация</button>
-          <button class="btn" onclick="goToLoginPassword()" id="loginBtnTop">Вход</button>
+          <button class="btn secondary" id="registerBtnTop" onclick="goToRegister()">Регистрация</button>
+          <button class="btn" id="loginBtnTop" onclick="goToLoginPassword()">Вход</button>
         </div>
         <div id="entryResult" class="status-box"></div>
       </div>
@@ -493,8 +495,8 @@
         <div class="helper" id="loginPhonePreview"></div>
         <input id="loginPassword" class="field" type="password" placeholder="Пароль" />
         <div class="row">
-          <button class="btn ghost" onclick="goToEntry()" id="backBtn1">Назад</button>
-          <button class="btn" onclick="login()" id="okBtn1">ОК</button>
+          <button class="btn ghost" id="backBtn1" onclick="goToEntry()">Назад</button>
+          <button class="btn" id="okBtn1" onclick="login()">ОК</button>
         </div>
         <div id="loginResult" class="status-box"></div>
       </div>
@@ -524,8 +526,8 @@
         <input id="usernameLink" class="field" placeholder="ID, например @329rfwmf9" />
         <div class="helper" id="regHint">ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.</div>
         <div class="row">
-          <button class="btn ghost" onclick="goToEntry()" id="backBtn2">Назад</button>
-          <button class="btn" onclick="registerFull()" id="createAccountBtn">Создать аккаунт</button>
+          <button class="btn ghost" id="backBtn2" onclick="goToEntry()">Назад</button>
+          <button class="btn" id="createAccountBtn" onclick="registerFull()">Создать аккаунт</button>
         </div>
         <div id="registerResult" class="status-box"></div>
       </div>
@@ -535,7 +537,7 @@
   <div id="appView" class="app-shell hidden">
     <aside class="sidebar">
       <div class="sidebar-top">
-        <button class="icon-btn" onclick="toggleSidebarMenu()">☰</button>
+        <button class="icon-btn" id="sidebarToggleBtn" onclick="toggleSidebarMenu()">☰</button>
 
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
@@ -567,7 +569,7 @@
 
       <div class="chat-create">
         <input id="targetUserId" class="field" placeholder="@id или user_id" />
-        <button class="btn" onclick="createDirectChat()" id="createChatBtn">Создать чат</button>
+        <button class="btn" id="createChatBtn" onclick="createDirectChat()">Создать чат</button>
       </div>
 
       <div id="chatList" class="chat-list"></div>
@@ -587,8 +589,8 @@
         <div class="composer">
           <textarea id="messageText" class="field" placeholder="Напиши сообщение"></textarea>
           <div class="row">
-            <button class="btn" onclick="sendMessage()" id="sendBtn">Отправить</button>
-            <button class="btn secondary" onclick="loadMessages()" id="refreshMessagesBtn">Обновить сообщения</button>
+            <button class="btn" id="sendBtn" onclick="sendMessage()">Отправить</button>
+            <button class="btn secondary" id="refreshMessagesBtn" onclick="loadMessages()">Обновить сообщения</button>
           </div>
         </div>
       </div>
@@ -601,8 +603,8 @@
           </div>
 
           <div class="right-actions">
-            <button class="icon-btn" onclick="openEditPanel()">✎</button>
-            <button class="icon-btn" onclick="toggleProfileMenu()">⋮</button>
+            <button class="icon-btn" id="editPanelBtn" onclick="openEditPanel()">✎</button>
+            <button class="icon-btn" id="profileMenuBtn" onclick="toggleProfileMenu()">⋮</button>
 
             <div id="profileMenu" class="profile-menu hidden">
               <div class="menu-item" onclick="logout()">↪ <span id="logoutMenuText">Выйти</span></div>
@@ -630,8 +632,8 @@
           <div class="panel-card">
             <h4 id="actionsTitle">Действия</h4>
             <div class="stack">
-              <button class="btn secondary" onclick="loadChats()" id="refreshChatsBtn">Обновить чаты</button>
-              <button class="btn danger" onclick="deleteMyAccount()" id="deleteAccountBtn">Удалить мой аккаунт</button>
+              <button class="btn secondary" id="refreshChatsBtn" onclick="loadChats()">Обновить чаты</button>
+              <button class="btn danger" id="deleteAccountBtn" onclick="deleteMyAccount()">Удалить мой аккаунт</button>
             </div>
           </div>
         </div>
@@ -645,8 +647,8 @@
               <input id="editUsername" class="field" placeholder="ID, например @myid" />
               <textarea id="editBio" class="field" placeholder="Bio"></textarea>
               <div class="row">
-                <button class="btn ghost" onclick="openProfilePanel()" id="cancelEditBtn">Назад</button>
-                <button class="btn" onclick="saveProfile()" id="saveEditBtn">Подтвердить</button>
+                <button class="btn ghost" id="cancelEditBtn" onclick="openProfilePanel()">Назад</button>
+                <button class="btn" id="saveEditBtn" onclick="saveProfile()">Подтвердить</button>
               </div>
               <div id="editResult" class="status-box"></div>
             </div>
@@ -664,6 +666,96 @@
     let cachedMe = null;
     let chatsCache = [];
     let currentLang = localStorage.getItem('lang') || 'ru';
+
+    const statusPill = document.getElementById('statusPill');
+    const authView = document.getElementById('authView');
+    const appView = document.getElementById('appView');
+
+    const authStepPhone = document.getElementById('authStepPhone');
+    const authStepLoginPassword = document.getElementById('authStepLoginPassword');
+    const authStepRegister = document.getElementById('authStepRegister');
+
+    const entryPhone = document.getElementById('entryPhone');
+    const entryResult = document.getElementById('entryResult');
+    const loginResult = document.getElementById('loginResult');
+    const registerResult = document.getElementById('registerResult');
+    const loginPhonePreview = document.getElementById('loginPhonePreview');
+    const loginPassword = document.getElementById('loginPassword');
+
+    const regPrefix = document.getElementById('regPrefix');
+    const regPhone = document.getElementById('regPhone');
+    const regPassword = document.getElementById('regPassword');
+    const regPassword2 = document.getElementById('regPassword2');
+    const firstName = document.getElementById('firstName');
+    const lastName = document.getElementById('lastName');
+    const usernameLink = document.getElementById('usernameLink');
+
+    const searchInput = document.getElementById('searchInput');
+    const targetUserId = document.getElementById('targetUserId');
+    const chatList = document.getElementById('chatList');
+    const chatTitle = document.getElementById('chatTitle');
+    const chatMeta = document.getElementById('chatMeta');
+    const messages = document.getElementById('messages');
+    const messageText = document.getElementById('messageText');
+
+    const meName = document.getElementById('meName');
+    const mePhone = document.getElementById('mePhone');
+    const myLinkInfo = document.getElementById('myLinkInfo');
+
+    const profileCardName = document.getElementById('profileCardName');
+    const profileCardPhone = document.getElementById('profileCardPhone');
+    const profileCardId = document.getElementById('profileCardId');
+    const profileCardBio = document.getElementById('profileCardBio');
+
+    const menuProfileName = document.getElementById('menuProfileName');
+    const menuProfileId = document.getElementById('menuProfileId');
+
+    const sidebarMenu = document.getElementById('sidebarMenu');
+    const profileMenu = document.getElementById('profileMenu');
+
+    const viewPanel = document.getElementById('viewPanel');
+    const editPanel = document.getElementById('editPanel');
+    const rightPanelTitle = document.getElementById('rightPanelTitle');
+    const rightPanelSubtitle = document.getElementById('rightPanelSubtitle');
+
+    const editFirstName = document.getElementById('editFirstName');
+    const editLastName = document.getElementById('editLastName');
+    const editUsername = document.getElementById('editUsername');
+    const editBio = document.getElementById('editBio');
+    const editResult = document.getElementById('editResult');
+
+    const authSubtitle = document.getElementById('authSubtitle');
+    const entryTitle = document.getElementById('entryTitle');
+    const entryHint = document.getElementById('entryHint');
+    const registerBtnTop = document.getElementById('registerBtnTop');
+    const loginBtnTop = document.getElementById('loginBtnTop');
+    const loginTitle = document.getElementById('loginTitle');
+    const backBtn1 = document.getElementById('backBtn1');
+    const okBtn1 = document.getElementById('okBtn1');
+    const regTitle = document.getElementById('regTitle');
+    const regHint = document.getElementById('regHint');
+    const backBtn2 = document.getElementById('backBtn2');
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    const tabAll = document.getElementById('tabAll');
+    const tabDirect = document.getElementById('tabDirect');
+    const tabGroups = document.getElementById('tabGroups');
+    const createChatBtn = document.getElementById('createChatBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const refreshMessagesBtn = document.getElementById('refreshMessagesBtn');
+    const profileCardTitle = document.getElementById('profileCardTitle');
+    const languageTitle = document.getElementById('languageTitle');
+    const actionsTitle = document.getElementById('actionsTitle');
+    const refreshChatsBtn = document.getElementById('refreshChatsBtn');
+    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+    const editTitle = document.getElementById('editTitle');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const logoutMenuText = document.getElementById('logoutMenuText');
+    const menuMyProfile = document.getElementById('menuMyProfile');
+    const menuSettings = document.getElementById('menuSettings');
+    const menuReset = document.getElementById('menuReset');
+    const langRuBtn = document.getElementById('langRuBtn');
+    const langEnBtn = document.getElementById('langEnBtn');
 
     const i18n = {
       ru: {
@@ -720,7 +812,6 @@
         resetConfirm: 'Очистить все тестовые регистрации и чаты?',
         resetDone: 'Все тестовые регистрации очищены',
         saveDone: 'Изменения сохранены',
-        profileWord: 'Профиль',
       },
       en: {
         authSubtitle: 'Dark messenger with turquoise accent',
@@ -776,7 +867,6 @@
         resetConfirm: 'Clear all test registrations and chats?',
         resetDone: 'All test registrations cleared',
         saveDone: 'Changes saved',
-        profileWord: 'Profile',
       }
     };
 
@@ -815,6 +905,7 @@
       menuMyProfile.textContent = t('menuMyProfile');
       menuSettings.textContent = t('menuSettings');
       menuReset.textContent = t('menuReset');
+
       searchInput.placeholder = t('searchPlaceholder');
       targetUserId.placeholder = t('targetPlaceholder');
       messageText.placeholder = t('messagePlaceholder');
@@ -869,6 +960,7 @@
     }
 
     function setStatus(text) { statusPill.textContent = text; }
+
     function showApp(show) {
       authView.classList.toggle('hidden', show);
       appView.classList.toggle('hidden', !show);
@@ -999,16 +1091,18 @@
         const me = await apiFetch(`${api}/users/me`);
         cachedMe = me;
 
-        meName.textContent = `${me.first_name} ${me.last_name}`.trim();
+        const fullName = `${me.first_name || ''} ${me.last_name || ''}`.trim();
+
+        meName.textContent = fullName || '—';
         mePhone.textContent = `${me.phone_prefix}${me.phone_number}`;
         myLinkInfo.textContent = me.username_link || '—';
 
-        profileCardName.textContent = `${me.first_name} ${me.last_name}`.trim();
+        profileCardName.textContent = fullName || '—';
         profileCardPhone.textContent = `${me.phone_prefix}${me.phone_number}`;
         profileCardId.textContent = me.username_link || '—';
         profileCardBio.textContent = me.bio ? me.bio : t('profileNoBio');
 
-        menuProfileName.textContent = `${me.first_name} ${me.last_name}`.trim();
+        menuProfileName.textContent = fullName || '—';
         menuProfileId.textContent = me.username_link || '—';
 
         editFirstName.value = me.first_name || '';
@@ -1029,13 +1123,15 @@
       chats
         .filter(c => {
           if (!query) return true;
-          const names = (c.members || []).map(m => `${m.first_name} ${m.last_name} ${m.username_link || ''}`.toLowerCase()).join(' ');
+          const names = (c.members || [])
+            .map(m => `${m.first_name || ''} ${m.last_name || ''} ${m.username_link || ''}`.toLowerCase())
+            .join(' ');
           return names.includes(query) || String(c.id).includes(query);
         })
         .forEach(c => {
           const item = document.createElement('div');
           item.className = 'chat-item' + (currentChatId === c.id ? ' active' : '');
-          const names = (c.members || []).map(m => `${m.first_name} ${m.last_name}`.trim()).join(', ');
+          const names = (c.members || []).map(m => `${m.first_name || ''} ${m.last_name || ''}`.trim()).join(', ');
           item.innerHTML = `
             <div class="chat-title">${c.title || (c.is_direct ? t('directChat') : 'Chat')}</div>
             <div class="chat-sub">${names}</div>
@@ -1240,13 +1336,15 @@
     document.addEventListener('click', (e) => {
       const insideSidebarMenu = sidebarMenu.contains(e.target);
       const insideProfileMenu = profileMenu.contains(e.target);
-      const sidebarToggle = e.target.closest('.sidebar-top .icon-btn');
-      const profileToggle = e.target.closest('.right-actions .icon-btn');
+      const sidebarToggle = e.target.closest('#sidebarToggleBtn');
+      const profileToggle = e.target.closest('#profileMenuBtn');
 
       if (!insideSidebarMenu && !insideProfileMenu && !sidebarToggle && !profileToggle) {
         hideMenus();
       }
     });
+
+    applyTranslations();
 
     if (token) {
       setStatus(t('statusAuthorized'));
@@ -1259,8 +1357,6 @@
       showApp(false);
       goToEntry();
     }
-
-    applyTranslations();
   </script>
 </body>
 </html>
