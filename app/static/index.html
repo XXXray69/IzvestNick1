@@ -6,235 +6,503 @@
   <title>IzvestNick</title>
   <style>
     :root{
-      --bg:#edf7f7;
-      --panel:#ffffffcc;
-      --panel-strong:#ffffff;
-      --line:#cfe6e6;
-      --text:#103234;
-      --muted:#56787a;
-      --accent:#1bb8b6;
-      --accent-2:#0d8f8d;
-      --accent-soft:#ddf6f5;
-      --danger:#b42318;
-      --shadow:0 18px 40px rgba(17, 52, 53, .10);
-      --radius:24px;
+      --bg:#101517;
+      --bg-2:#141b1d;
+      --panel:#151d20;
+      --panel-2:#182226;
+      --panel-3:#1b2529;
+      --line:#243238;
+      --text:#e8f6f5;
+      --muted:#8eacab;
+      --accent:#22c7c4;
+      --accent-2:#159f9c;
+      --accent-soft:rgba(34,199,196,.15);
+      --danger:#cf4e4e;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:20px;
     }
 
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       font-family:Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top right, rgba(27,184,182,.14), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(13,143,141,.12), transparent 30%),
-        linear-gradient(180deg,#f4fbfb 0%, #eaf5f5 100%);
+        radial-gradient(circle at top left, rgba(34,199,196,.08), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(34,199,196,.06), transparent 26%),
+        linear-gradient(180deg,#0e1315 0%, #141b1d 100%);
     }
 
-    .shell{max-width:1480px;margin:0 auto;padding:18px}
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;
-      gap:16px;margin-bottom:16px
-    }
-    .brand h1{margin:0;font-size:42px;letter-spacing:-1px}
-    .brand p{margin:6px 0 0;color:var(--muted);font-size:14px}
-    .status-pill{
-      padding:10px 14px;border-radius:999px;background:var(--panel-strong);
-      border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px
-    }
+    .hidden{display:none!important}
 
-    .auth-wrap{max-width:620px;margin:28px auto}
-    .card{
-      background:var(--panel);
-      border:1px solid rgba(255,255,255,.7);
-      backdrop-filter:blur(18px);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
+    .auth-shell{
+      max-width:620px;
+      margin:40px auto;
       padding:20px;
+    }
+
+    .auth-card{
+      background:linear-gradient(180deg,var(--panel),var(--panel-2));
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:22px;
     }
 
     .stack{display:flex;flex-direction:column;gap:12px}
     .row{display:flex;gap:10px}
     .row>*{flex:1}
-    .hidden{display:none!important}
 
-    h2,h3{margin:0 0 6px}
-    .helper{font-size:12px;color:var(--muted);line-height:1.45}
-    .field{
-      width:100%;padding:14px 16px;border-radius:16px;border:1px solid var(--line);
-      background:#fff;color:var(--text);outline:none;font-size:15px
+    .brand{
+      margin-bottom:12px;
     }
-    .field:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(27,184,182,.12)}
+    .brand h1{
+      margin:0;
+      font-size:42px;
+      letter-spacing:-1px;
+      color:#fff;
+    }
+    .brand p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .field, .select, textarea{
+      width:100%;
+      background:var(--panel-3);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 16px;
+      font-size:15px;
+      outline:none;
+    }
+    .field:focus, .select:focus, textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 4px rgba(34,199,196,.12);
+    }
 
     .btn{
-      width:100%;padding:14px 16px;border:none;border-radius:16px;cursor:pointer;
-      font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff
+      width:100%;
+      border:none;
+      border-radius:16px;
+      padding:14px 16px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:15px;
+      color:#061414;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
     }
     .btn.secondary{
-      background:var(--accent-soft);color:var(--text);border:1px solid var(--line)
+      background:var(--accent-soft);
+      color:var(--text);
+      border:1px solid rgba(34,199,196,.18);
     }
     .btn.ghost{
-      background:#fff;color:var(--text);border:1px solid var(--line)
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--line);
     }
     .btn.danger{
-      background:linear-gradient(135deg,#d94d42,#b42318);color:#fff
+      background:linear-gradient(135deg,#d55d5d,#b53838);
+      color:#fff;
     }
 
-    .status-box{
-      min-height:20px;font-size:13px;color:var(--muted);white-space:pre-wrap;word-break:break-word
+    .helper, .status-box{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
     }
+    .status-box{min-height:18px}
 
-    .app-grid{
+    .app-shell{
       display:grid;
-      grid-template-columns:330px minmax(0, 1fr) 320px;
-      gap:16px;
-      min-height:calc(100vh - 110px);
+      grid-template-columns:380px minmax(0,1fr);
+      min-height:100vh;
     }
 
-    .left,.center,.right{
-      background:var(--panel);
-      border:1px solid rgba(255,255,255,.7);
-      backdrop-filter:blur(18px);
-      border-radius:28px;
-      box-shadow:var(--shadow);
-      padding:16px;
+    .sidebar{
+      background:linear-gradient(180deg,#11181a 0%, #161f22 100%);
+      border-right:1px solid var(--line);
+      padding:10px;
+      position:relative;
     }
 
-    .profile-card{
-      background:linear-gradient(135deg,#ffffff,#f1fbfb);
+    .sidebar-top{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      position:relative;
+    }
+
+    .icon-btn{
+      width:44px;
+      height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:14px;
       border:1px solid var(--line);
-      border-radius:22px;
+      background:var(--panel);
+      color:var(--text);
+      cursor:pointer;
+      font-size:20px;
+    }
+
+    .search-wrap{
+      flex:1;
+      position:relative;
+    }
+
+    .search-input{
+      width:100%;
+      height:44px;
+      border-radius:14px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      color:var(--text);
+      padding:0 14px 0 42px;
+      font-size:15px;
+      outline:none;
+    }
+
+    .search-icon{
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .sidebar-menu{
+      position:absolute;
+      top:58px;
+      left:0;
+      width:260px;
+      background:rgba(20,27,29,.98);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      z-index:50;
+    }
+
+    .menu-head{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(135deg, rgba(34,199,196,.18), transparent);
+    }
+
+    .menu-head .name{
+      font-weight:700;
+      font-size:18px;
+      margin-bottom:4px;
+    }
+
+    .menu-item{
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,.03);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:var(--text);
+    }
+    .menu-item:hover{
+      background:rgba(34,199,196,.08);
+    }
+
+    .section-tabs{
+      display:flex;
+      gap:10px;
+      margin:10px 0 12px;
+      padding:0 6px;
+      flex-wrap:wrap;
+    }
+
+    .tab{
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      cursor:pointer;
+    }
+    .tab.active{
+      color:var(--text);
+      background:var(--accent-soft);
+      border-color:rgba(34,199,196,.26);
+    }
+
+    .profile-mini{
+      background:linear-gradient(135deg, rgba(34,199,196,.12), rgba(34,199,196,.03));
+      border:1px solid rgba(34,199,196,.18);
+      border-radius:18px;
       padding:14px;
-      margin-bottom:14px;
-    }
-    .profile-name{font-size:24px;font-weight:800;margin-bottom:6px}
-    .profile-line{font-size:14px;margin:4px 0;color:var(--muted)}
-
-    .left-section-title,
-    .center-title,
-    .right-title{
-      font-size:26px;font-weight:800;margin:2px 0 10px
+      margin:0 6px 12px;
     }
 
-    .chat-search{
-      margin-bottom:10px
+    .profile-mini .name{
+      font-weight:700;
+      font-size:20px;
+      margin-bottom:4px;
+    }
+
+    .profile-mini .meta{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .chat-create{
+      display:flex;
+      gap:10px;
+      margin:0 6px 12px;
     }
 
     .chat-list{
-      display:flex;flex-direction:column;gap:10px;
-      max-height:430px;overflow:auto;margin-top:8px
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding:0 6px;
+      max-height:calc(100vh - 290px);
+      overflow:auto;
     }
 
     .chat-item{
-      padding:14px;border-radius:18px;background:#fff;border:1px solid var(--line);
-      cursor:pointer;transition:.15s ease;
-    }
-    .chat-item:hover{transform:translateY(-1px)}
-    .chat-item.active{
-      background:linear-gradient(135deg,#e7fbfa,#f4ffff);
-      border-color:var(--accent);
-      box-shadow:0 8px 18px rgba(27,184,182,.10)
-    }
-    .chat-item strong{display:block;margin-bottom:4px}
-    .small{font-size:12px;color:var(--muted)}
-
-    .hero-panel{
-      border-radius:24px;
+      padding:14px;
+      border-radius:18px;
+      background:var(--panel);
       border:1px solid var(--line);
-      background:
-        radial-gradient(circle at top left, rgba(27,184,182,.10), transparent 25%),
-        radial-gradient(circle at bottom right, rgba(13,143,141,.08), transparent 28%),
-        linear-gradient(180deg,#ffffff 0%, #f6fbfb 100%);
-      min-height:430px;
-      padding:16px;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .chat-item:hover{
+      transform:translateY(-1px);
+      border-color:rgba(34,199,196,.22);
+    }
+    .chat-item.active{
+      background:linear-gradient(135deg, rgba(34,199,196,.14), rgba(34,199,196,.04));
+      border-color:rgba(34,199,196,.28);
+    }
+    .chat-title{
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .chat-sub{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .main{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 360px;
+      min-height:100vh;
+    }
+
+    .chat-panel{
       display:flex;
       flex-direction:column;
-      gap:12px;
+      background:linear-gradient(180deg,#101517 0%, #131a1c 100%);
     }
 
-    .chat-head{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;
-      padding-bottom:12px;border-bottom:1px solid var(--line)
+    .chat-top{
+      height:72px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px;
+      background:rgba(255,255,255,.02);
     }
-    .chat-head-meta h3{margin:0;font-size:24px}
-    .chat-head-meta p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .chat-top .title{
+      font-size:24px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .chat-top .sub{
+      font-size:13px;
+      color:var(--muted);
+    }
 
     .messages{
-      flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px
+      flex:1;
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:auto;
+      background:
+        radial-gradient(circle at top right, rgba(34,199,196,.05), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.00));
     }
 
     .msg{
-      max-width:76%;
-      padding:12px 14px;border-radius:18px;
-      font-size:14px;line-height:1.45;
-      border:1px solid var(--line)
+      max-width:72%;
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      line-height:1.45;
+      font-size:14px;
+      white-space:pre-wrap;
+      word-break:break-word;
     }
     .msg.me{
       margin-left:auto;
+      border:none;
+      color:#041213;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      color:#fff;border:none
     }
     .msg.them{
-      background:#fff;color:var(--text)
+      background:var(--panel);
+      color:var(--text);
     }
 
     .composer{
-      display:flex;flex-direction:column;gap:10px
+      padding:14px 18px 18px;
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.02);
     }
-    textarea.field{
-      min-height:84px;resize:vertical
+    .composer textarea{
+      min-height:84px;
+      resize:vertical;
     }
 
-    .right-block{
-      background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px
+    .right-panel{
+      border-left:1px solid var(--line);
+      background:linear-gradient(180deg,#11181a 0%, #161f22 100%);
+      padding:16px;
     }
-    .right-block h4{margin:0 0 10px;font-size:18px}
-    .action-note{font-size:13px;color:var(--muted);line-height:1.45}
 
-    @media (max-width: 1150px){
-      .app-grid{grid-template-columns:1fr}
-      .left,.center,.right{min-height:auto}
+    .right-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .right-title{
+      font-size:28px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .right-actions{
+      display:flex;
+      gap:8px;
+      position:relative;
+    }
+
+    .profile-menu{
+      position:absolute;
+      right:0;
+      top:52px;
+      width:220px;
+      background:rgba(20,27,29,.98);
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      z-index:40;
+    }
+
+    .panel-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      margin-bottom:12px;
+    }
+
+    .panel-card h4{
+      margin:0 0 10px;
+      font-size:17px;
+    }
+
+    .panel-note{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .lang-chip{
+      flex:1;
+      padding:10px 12px;
+      border-radius:14px;
+      background:var(--panel-3);
+      border:1px solid var(--line);
+      text-align:center;
+      cursor:pointer;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .lang-chip.active{
+      color:var(--text);
+      background:var(--accent-soft);
+      border-color:rgba(34,199,196,.25);
+    }
+
+    @media (max-width: 1200px){
+      .main{grid-template-columns:1fr}
+      .right-panel{border-left:none;border-top:1px solid var(--line)}
+    }
+
+    @media (max-width: 900px){
+      .app-shell{grid-template-columns:1fr}
+      .sidebar{border-right:none;border-bottom:1px solid var(--line)}
     }
   </style>
 </head>
 <body>
-<div class="shell">
-  <div class="topbar">
+  <div id="authView" class="auth-shell">
     <div class="brand">
       <h1>IzvestNick</h1>
-      <p>Бирюзовый веб-мессенджер для теста backend на Render</p>
+      <p id="authSubtitle">Тёмный мессенджер с бирюзовым акцентом</p>
     </div>
-    <div class="status-pill" id="statusPill">Не авторизован</div>
-  </div>
 
-  <div id="authView" class="auth-wrap">
-    <div class="card stack">
+    <div class="auth-card stack">
       <div id="authStepPhone" class="stack">
-        <h2>Вход или регистрация</h2>
-        <div class="helper">Сначала введи номер телефона, затем выбери действие.</div>
+        <h2 id="entryTitle">Вход или регистрация</h2>
+        <div class="helper" id="entryHint">Сначала введи номер телефона, затем выбери действие.</div>
         <input id="entryPhone" class="field" placeholder="Например 9991234567" />
         <div class="row">
-          <button class="btn secondary" onclick="goToRegister()">Регистрация</button>
-          <button class="btn" onclick="goToLoginPassword()">Вход</button>
+          <button class="btn secondary" onclick="goToRegister()" id="registerBtnTop">Регистрация</button>
+          <button class="btn" onclick="goToLoginPassword()" id="loginBtnTop">Вход</button>
         </div>
         <div id="entryResult" class="status-box"></div>
       </div>
 
       <div id="authStepLoginPassword" class="stack hidden">
-        <h2>Вход</h2>
+        <h2 id="loginTitle">Вход</h2>
         <div class="helper" id="loginPhonePreview"></div>
         <input id="loginPassword" class="field" type="password" placeholder="Пароль" />
         <div class="row">
-          <button class="btn ghost" onclick="goToEntry()">Назад</button>
-          <button class="btn" onclick="login()">ОК</button>
+          <button class="btn ghost" onclick="goToEntry()" id="backBtn1">Назад</button>
+          <button class="btn" onclick="login()" id="okBtn1">ОК</button>
         </div>
         <div id="loginResult" class="status-box"></div>
       </div>
 
       <div id="authStepRegister" class="stack hidden">
-        <h2>Регистрация</h2>
+        <h2 id="regTitle">Регистрация</h2>
         <div class="row">
-          <select id="regPrefix" class="field">
+          <select id="regPrefix" class="select">
             <option>+7</option>
             <option>+1</option>
             <option>+44</option>
@@ -254,44 +522,63 @@
           <input id="lastName" class="field" placeholder="Фамилия" />
         </div>
         <input id="usernameLink" class="field" placeholder="ID, например @329rfwmf9" />
-        <div class="helper">ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.</div>
+        <div class="helper" id="regHint">ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.</div>
         <div class="row">
-          <button class="btn ghost" onclick="goToEntry()">Назад</button>
-          <button class="btn" onclick="registerFull()">Создать аккаунт</button>
+          <button class="btn ghost" onclick="goToEntry()" id="backBtn2">Назад</button>
+          <button class="btn" onclick="registerFull()" id="createAccountBtn">Создать аккаунт</button>
         </div>
         <div id="registerResult" class="status-box"></div>
       </div>
     </div>
   </div>
 
-  <div id="appView" class="app-grid hidden">
-    <aside class="left">
-      <div class="profile-card">
-        <div class="profile-name" id="meName">—</div>
-        <div class="profile-line" id="mePhone">—</div>
-        <div class="profile-line" id="myLinkInfo">—</div>
+  <div id="appView" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <button class="icon-btn" onclick="toggleSidebarMenu()">☰</button>
+
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" class="search-input" placeholder="Search" oninput="filterChats()" />
+        </div>
+
+        <div id="sidebarMenu" class="sidebar-menu hidden">
+          <div class="menu-head">
+            <div class="name" id="menuProfileName">—</div>
+            <div class="helper" id="menuProfileId">—</div>
+          </div>
+          <div class="menu-item" onclick="openProfilePanel()">👤 <span id="menuMyProfile">My Profile</span></div>
+          <div class="menu-item" onclick="openSettingsPanel()">⚙ <span id="menuSettings">Settings</span></div>
+          <div class="menu-item" onclick="resetAllDemoData()">🧹 <span id="menuReset">Clear test data</span></div>
+        </div>
       </div>
 
-      <div class="left-section-title">Чаты</div>
-
-      <div class="chat-search">
-        <input id="targetUserId" class="field" placeholder="@id или числовой user_id" />
+      <div class="section-tabs">
+        <div class="tab active" id="tabAll">All</div>
+        <div class="tab" id="tabDirect">Direct</div>
+        <div class="tab" id="tabGroups">Groups</div>
       </div>
 
-      <div class="row" style="margin-bottom:10px">
-        <button class="btn" onclick="createDirectChat()">Создать чат</button>
-        <button class="btn secondary" onclick="loadChats()">Обновить</button>
+      <div class="profile-mini">
+        <div class="name" id="meName">—</div>
+        <div class="meta" id="mePhone">—</div>
+        <div class="meta" id="myLinkInfo">—</div>
+      </div>
+
+      <div class="chat-create">
+        <input id="targetUserId" class="field" placeholder="@id или user_id" />
+        <button class="btn" onclick="createDirectChat()" id="createChatBtn">Создать чат</button>
       </div>
 
       <div id="chatList" class="chat-list"></div>
     </aside>
 
-    <main class="center">
-      <div class="hero-panel">
-        <div class="chat-head">
-          <div class="chat-head-meta">
-            <h3 id="chatTitle">Выбери чат</h3>
-            <p id="chatMeta">Открой существующий чат или создай новый по @ID</p>
+    <section class="main">
+      <div class="chat-panel">
+        <div class="chat-top">
+          <div>
+            <div class="title" id="chatTitle">Выбери чат</div>
+            <div class="sub" id="chatMeta">Открой существующий чат или найди пользователя по @ID</div>
           </div>
         </div>
 
@@ -300,359 +587,680 @@
         <div class="composer">
           <textarea id="messageText" class="field" placeholder="Напиши сообщение"></textarea>
           <div class="row">
-            <button class="btn" onclick="sendMessage()">Отправить</button>
-            <button class="btn secondary" onclick="loadMessages()">Обновить сообщения</button>
+            <button class="btn" onclick="sendMessage()" id="sendBtn">Отправить</button>
+            <button class="btn secondary" onclick="loadMessages()" id="refreshMessagesBtn">Обновить сообщения</button>
           </div>
         </div>
       </div>
-    </main>
 
-    <aside class="right">
-      <div class="right-title">Действия</div>
+      <aside class="right-panel">
+        <div class="right-top">
+          <div>
+            <div class="right-title" id="rightPanelTitle">Профиль</div>
+            <div class="panel-note" id="rightPanelSubtitle">Имя, номер, ID и управление аккаунтом</div>
+          </div>
 
-      <div class="right-block" style="margin-bottom:12px">
-        <h4>Профиль</h4>
-        <div class="action-note">После регистрации ты сразу попадаешь сюда. Слева отображаются имя, номер и ID.</div>
-      </div>
+          <div class="right-actions">
+            <button class="icon-btn" onclick="openEditPanel()">✎</button>
+            <button class="icon-btn" onclick="toggleProfileMenu()">⋮</button>
 
-      <div class="right-block" style="margin-bottom:12px">
-        <h4>Тестовые данные</h4>
-        <div class="stack">
-          <button class="btn ghost" onclick="logout()">Выйти</button>
-          <button class="btn danger" onclick="deleteMyAccount()">Удалить мой аккаунт</button>
-          <button class="btn secondary" onclick="resetAllDemoData()">Очистить все тестовые регистрации</button>
+            <div id="profileMenu" class="profile-menu hidden">
+              <div class="menu-item" onclick="logout()">↪ <span id="logoutMenuText">Выйти</span></div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="right-block">
-        <h4>Подсказка</h4>
-        <div class="action-note">Можно находить пользователя по его ID, например <b>@sozdatel1</b>. Также поддерживается ввод числового <b>user_id</b>.</div>
-      </div>
-    </aside>
+        <div id="viewPanel">
+          <div class="panel-card">
+            <h4 id="profileCardTitle">Мой профиль</h4>
+            <div class="panel-note" id="profileCardName">—</div>
+            <div class="panel-note" id="profileCardPhone">—</div>
+            <div class="panel-note" id="profileCardId">—</div>
+            <div class="panel-note" id="profileCardBio">—</div>
+          </div>
+
+          <div class="panel-card">
+            <h4 id="languageTitle">Язык</h4>
+            <div class="lang-switch">
+              <div class="lang-chip active" id="langRuBtn" onclick="setLang('ru')">Русский</div>
+              <div class="lang-chip" id="langEnBtn" onclick="setLang('en')">English</div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h4 id="actionsTitle">Действия</h4>
+            <div class="stack">
+              <button class="btn secondary" onclick="loadChats()" id="refreshChatsBtn">Обновить чаты</button>
+              <button class="btn danger" onclick="deleteMyAccount()" id="deleteAccountBtn">Удалить мой аккаунт</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="editPanel" class="hidden">
+          <div class="panel-card">
+            <h4 id="editTitle">Редактирование профиля</h4>
+            <div class="stack">
+              <input id="editFirstName" class="field" placeholder="Имя" />
+              <input id="editLastName" class="field" placeholder="Фамилия" />
+              <input id="editUsername" class="field" placeholder="ID, например @myid" />
+              <textarea id="editBio" class="field" placeholder="Bio"></textarea>
+              <div class="row">
+                <button class="btn ghost" onclick="openProfilePanel()" id="cancelEditBtn">Назад</button>
+                <button class="btn" onclick="saveProfile()" id="saveEditBtn">Подтвердить</button>
+              </div>
+              <div id="editResult" class="status-box"></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
   </div>
-</div>
 
-<script>
-const api = '/api/v1';
-let token = localStorage.getItem('access_token') || '';
-let currentChatId = null;
-let ws = null;
-let cachedMe = null;
+  <script>
+    const api = '/api/v1';
+    let token = localStorage.getItem('access_token') || '';
+    let currentChatId = null;
+    let ws = null;
+    let cachedMe = null;
+    let chatsCache = [];
+    let currentLang = localStorage.getItem('lang') || 'ru';
 
-async function parseResponse(res) {
-  const text = await res.text();
-  let data;
-  try { data = text ? JSON.parse(text) : {}; }
-  catch { data = { raw: text }; }
-  return data;
-}
+    const i18n = {
+      ru: {
+        authSubtitle: 'Тёмный мессенджер с бирюзовым акцентом',
+        entryTitle: 'Вход или регистрация',
+        entryHint: 'Сначала введи номер телефона, затем выбери действие.',
+        registerBtnTop: 'Регистрация',
+        loginBtnTop: 'Вход',
+        loginTitle: 'Вход',
+        backBtn1: 'Назад',
+        okBtn1: 'ОК',
+        regTitle: 'Регистрация',
+        regHint: 'ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.',
+        backBtn2: 'Назад',
+        createAccountBtn: 'Создать аккаунт',
+        tabAll: 'Все',
+        tabDirect: 'Личные',
+        tabGroups: 'Группы',
+        createChatBtn: 'Создать чат',
+        sendBtn: 'Отправить',
+        refreshMessagesBtn: 'Обновить сообщения',
+        rightPanelTitle: 'Профиль',
+        rightPanelSubtitle: 'Имя, номер, ID и управление аккаунтом',
+        profileCardTitle: 'Мой профиль',
+        languageTitle: 'Язык',
+        actionsTitle: 'Действия',
+        refreshChatsBtn: 'Обновить чаты',
+        deleteAccountBtn: 'Удалить мой аккаунт',
+        editTitle: 'Редактирование профиля',
+        cancelEditBtn: 'Назад',
+        saveEditBtn: 'Подтвердить',
+        logoutMenuText: 'Выйти',
+        menuMyProfile: 'Мой профиль',
+        menuSettings: 'Настройки',
+        menuReset: 'Очистить тестовые данные',
+        searchPlaceholder: 'Поиск',
+        targetPlaceholder: '@id или user_id',
+        messagePlaceholder: 'Напиши сообщение',
+        editBioPlaceholder: 'Bio',
+        chooseChat: 'Выбери чат',
+        chooseChatSub: 'Открой существующий чат или найди пользователя по @ID',
+        directChat: 'Личный чат',
+        profileNoBio: 'Без описания',
+        statusAuthorized: 'Авторизован',
+        statusUnauthorized: 'Не авторизован',
+        enterPhoneFirst: 'Сначала введи номер телефона',
+        enterPhonePassword: 'Введи номер и пароль',
+        fillRequired: 'Заполни все обязательные поля',
+        enterTarget: 'Введи user_id или @id',
+        enterTargetCorrect: 'Нужно ввести @id или числовой user_id',
+        chooseChatFirst: 'Сначала выбери чат',
+        deleteAccountConfirm: 'Удалить текущий аккаунт? Номер и ID освободятся.',
+        deleteAccountDone: 'Аккаунт удалён',
+        resetConfirm: 'Очистить все тестовые регистрации и чаты?',
+        resetDone: 'Все тестовые регистрации очищены',
+        saveDone: 'Изменения сохранены',
+        profileWord: 'Профиль',
+      },
+      en: {
+        authSubtitle: 'Dark messenger with turquoise accent',
+        entryTitle: 'Login or registration',
+        entryHint: 'First enter your phone number, then choose an action.',
+        registerBtnTop: 'Register',
+        loginBtnTop: 'Login',
+        loginTitle: 'Login',
+        backBtn1: 'Back',
+        okBtn1: 'OK',
+        regTitle: 'Registration',
+        regHint: 'ID must start with @ and contain only English letters and digits. If left empty, it will be generated automatically.',
+        backBtn2: 'Back',
+        createAccountBtn: 'Create account',
+        tabAll: 'All',
+        tabDirect: 'Direct',
+        tabGroups: 'Groups',
+        createChatBtn: 'Create chat',
+        sendBtn: 'Send',
+        refreshMessagesBtn: 'Refresh messages',
+        rightPanelTitle: 'Profile',
+        rightPanelSubtitle: 'Name, number, ID and account management',
+        profileCardTitle: 'My profile',
+        languageTitle: 'Language',
+        actionsTitle: 'Actions',
+        refreshChatsBtn: 'Refresh chats',
+        deleteAccountBtn: 'Delete my account',
+        editTitle: 'Edit profile',
+        cancelEditBtn: 'Back',
+        saveEditBtn: 'Confirm',
+        logoutMenuText: 'Log out',
+        menuMyProfile: 'My profile',
+        menuSettings: 'Settings',
+        menuReset: 'Clear test data',
+        searchPlaceholder: 'Search',
+        targetPlaceholder: '@id or user_id',
+        messagePlaceholder: 'Write a message',
+        editBioPlaceholder: 'Bio',
+        chooseChat: 'Choose a chat',
+        chooseChatSub: 'Open an existing chat or find a user by @ID',
+        directChat: 'Direct chat',
+        profileNoBio: 'No bio',
+        statusAuthorized: 'Authorized',
+        statusUnauthorized: 'Not authorized',
+        enterPhoneFirst: 'Enter your phone number first',
+        enterPhonePassword: 'Enter phone number and password',
+        fillRequired: 'Fill in all required fields',
+        enterTarget: 'Enter user_id or @id',
+        enterTargetCorrect: 'Enter @id or numeric user_id',
+        chooseChatFirst: 'Choose a chat first',
+        deleteAccountConfirm: 'Delete current account? The number and ID will be released.',
+        deleteAccountDone: 'Account deleted',
+        resetConfirm: 'Clear all test registrations and chats?',
+        resetDone: 'All test registrations cleared',
+        saveDone: 'Changes saved',
+        profileWord: 'Profile',
+      }
+    };
 
-function extractError(data, fallback='Ошибка') {
-  if (typeof data?.detail === 'string') return data.detail;
-  if (data?.detail) return JSON.stringify(data.detail);
-  if (typeof data?.raw === 'string' && data.raw.trim()) {
-    if (data.raw.includes('<!DOCTYPE') || data.raw.includes('<html')) {
-      return 'Сервер вернул HTML-ошибку вместо JSON. Проверь деплой.';
+    function t(key){ return i18n[currentLang][key] || key; }
+
+    function applyTranslations(){
+      authSubtitle.textContent = t('authSubtitle');
+      entryTitle.textContent = t('entryTitle');
+      entryHint.textContent = t('entryHint');
+      registerBtnTop.textContent = t('registerBtnTop');
+      loginBtnTop.textContent = t('loginBtnTop');
+      loginTitle.textContent = t('loginTitle');
+      backBtn1.textContent = t('backBtn1');
+      okBtn1.textContent = t('okBtn1');
+      regTitle.textContent = t('regTitle');
+      regHint.textContent = t('regHint');
+      backBtn2.textContent = t('backBtn2');
+      createAccountBtn.textContent = t('createAccountBtn');
+      tabAll.textContent = t('tabAll');
+      tabDirect.textContent = t('tabDirect');
+      tabGroups.textContent = t('tabGroups');
+      createChatBtn.textContent = t('createChatBtn');
+      sendBtn.textContent = t('sendBtn');
+      refreshMessagesBtn.textContent = t('refreshMessagesBtn');
+      rightPanelTitle.textContent = t('rightPanelTitle');
+      rightPanelSubtitle.textContent = t('rightPanelSubtitle');
+      profileCardTitle.textContent = t('profileCardTitle');
+      languageTitle.textContent = t('languageTitle');
+      actionsTitle.textContent = t('actionsTitle');
+      refreshChatsBtn.textContent = t('refreshChatsBtn');
+      deleteAccountBtn.textContent = t('deleteAccountBtn');
+      editTitle.textContent = t('editTitle');
+      cancelEditBtn.textContent = t('cancelEditBtn');
+      saveEditBtn.textContent = t('saveEditBtn');
+      logoutMenuText.textContent = t('logoutMenuText');
+      menuMyProfile.textContent = t('menuMyProfile');
+      menuSettings.textContent = t('menuSettings');
+      menuReset.textContent = t('menuReset');
+      searchInput.placeholder = t('searchPlaceholder');
+      targetUserId.placeholder = t('targetPlaceholder');
+      messageText.placeholder = t('messagePlaceholder');
+      editBio.placeholder = t('editBioPlaceholder');
+
+      if (!currentChatId) {
+        chatTitle.textContent = t('chooseChat');
+        chatMeta.textContent = t('chooseChatSub');
+      }
+
+      langRuBtn.classList.toggle('active', currentLang === 'ru');
+      langEnBtn.classList.toggle('active', currentLang === 'en');
+
+      setStatus(token ? t('statusAuthorized') : t('statusUnauthorized'));
     }
-    return data.raw;
-  }
-  return fallback;
-}
 
-async function apiFetch(path, options = {}) {
-  const headers = options.headers || {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  if (!(options.body instanceof FormData) && !headers['Content-Type']) {
-    headers['Content-Type'] = 'application/json';
-  }
-
-  const res = await fetch(path, { ...options, headers });
-  const data = await parseResponse(res);
-  if (!res.ok) throw new Error(extractError(data, res.statusText));
-  return data;
-}
-
-function setStatus(text) { statusPill.textContent = text; }
-function showApp(show) {
-  authView.classList.toggle('hidden', show);
-  appView.classList.toggle('hidden', !show);
-}
-function hideAllAuthSteps() {
-  authStepPhone.classList.add('hidden');
-  authStepLoginPassword.classList.add('hidden');
-  authStepRegister.classList.add('hidden');
-}
-function goToEntry() {
-  hideAllAuthSteps();
-  authStepPhone.classList.remove('hidden');
-  entryResult.textContent = '';
-  loginResult.textContent = '';
-  registerResult.textContent = '';
-}
-function goToLoginPassword() {
-  if (!entryPhone.value.trim()) {
-    entryResult.textContent = 'Сначала введи номер телефона';
-    return;
-  }
-  hideAllAuthSteps();
-  authStepLoginPassword.classList.remove('hidden');
-  loginPhonePreview.textContent = 'Номер: ' + entryPhone.value.trim();
-  loginResult.textContent = '';
-}
-function goToRegister() {
-  if (entryPhone.value.trim()) regPhone.value = entryPhone.value.trim();
-  hideAllAuthSteps();
-  authStepRegister.classList.remove('hidden');
-  registerResult.textContent = '';
-}
-
-async function registerFull() {
-  try {
-    registerResult.textContent = '';
-
-    const phone = regPhone.value.trim();
-    const prefix = regPrefix.value;
-    const password = regPassword.value;
-    const confirm = regPassword2.value;
-    const first = firstName.value.trim();
-    const last = lastName.value.trim();
-    const username = usernameLink.value.trim();
-
-    if (!phone || !password || !confirm || !first || !last) {
-      throw new Error('Заполни все обязательные поля');
+    function setLang(lang){
+      currentLang = lang;
+      localStorage.setItem('lang', lang);
+      applyTranslations();
+      renderChats(chatsCache);
     }
 
-    const regData = await apiFetch(`${api}/auth/register`, {
-      method: 'POST',
-      body: JSON.stringify({
-        phone_prefix: prefix,
-        phone_number: phone,
-        password: password,
-        confirm_password: confirm
-      })
+    async function parseResponse(res) {
+      const text = await res.text();
+      let data;
+      try { data = text ? JSON.parse(text) : {}; }
+      catch { data = { raw: text }; }
+      return data;
+    }
+
+    function extractError(data, fallback='Error') {
+      if (typeof data?.detail === 'string') return data.detail;
+      if (data?.detail) return JSON.stringify(data.detail);
+      if (typeof data?.raw === 'string' && data.raw.trim()) {
+        if (data.raw.includes('<!DOCTYPE') || data.raw.includes('<html')) return 'Server returned HTML instead of JSON.';
+        return data.raw;
+      }
+      return fallback;
+    }
+
+    async function apiFetch(path, options = {}) {
+      const headers = options.headers || {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (!(options.body instanceof FormData) && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+      }
+      const res = await fetch(path, { ...options, headers });
+      const data = await parseResponse(res);
+      if (!res.ok) throw new Error(extractError(data, res.statusText));
+      return data;
+    }
+
+    function setStatus(text) { statusPill.textContent = text; }
+    function showApp(show) {
+      authView.classList.toggle('hidden', show);
+      appView.classList.toggle('hidden', !show);
+    }
+
+    function hideAllAuthSteps() {
+      authStepPhone.classList.add('hidden');
+      authStepLoginPassword.classList.add('hidden');
+      authStepRegister.classList.add('hidden');
+    }
+
+    function goToEntry() {
+      hideAllAuthSteps();
+      authStepPhone.classList.remove('hidden');
+      entryResult.textContent = '';
+      loginResult.textContent = '';
+      registerResult.textContent = '';
+    }
+
+    function goToLoginPassword() {
+      if (!entryPhone.value.trim()) {
+        entryResult.textContent = t('enterPhoneFirst');
+        return;
+      }
+      hideAllAuthSteps();
+      authStepLoginPassword.classList.remove('hidden');
+      loginPhonePreview.textContent = entryPhone.value.trim();
+      loginResult.textContent = '';
+    }
+
+    function goToRegister() {
+      if (entryPhone.value.trim()) regPhone.value = entryPhone.value.trim();
+      hideAllAuthSteps();
+      authStepRegister.classList.remove('hidden');
+      registerResult.textContent = '';
+    }
+
+    async function registerFull() {
+      try {
+        registerResult.textContent = '';
+
+        const phone = regPhone.value.trim();
+        const prefix = regPrefix.value;
+        const password = regPassword.value;
+        const confirm = regPassword2.value;
+        const first = firstName.value.trim();
+        const last = lastName.value.trim();
+        const username = usernameLink.value.trim();
+
+        if (!phone || !password || !confirm || !first || !last) {
+          throw new Error(t('fillRequired'));
+        }
+
+        const regData = await apiFetch(`${api}/auth/register`, {
+          method: 'POST',
+          body: JSON.stringify({
+            phone_prefix: prefix,
+            phone_number: phone,
+            password: password,
+            confirm_password: confirm
+          })
+        });
+
+        const fd = new FormData();
+        fd.append('user_id', String(regData.user_id));
+        fd.append('first_name', first);
+        fd.append('last_name', last);
+        fd.append('username_link', username);
+
+        const profileRes = await fetch(`${api}/auth/complete-profile`, { method: 'POST', body: fd });
+        const profileData = await parseResponse(profileRes);
+        if (!profileRes.ok) throw new Error(extractError(profileData, 'Profile save error'));
+
+        const loginData = await apiFetch(`${api}/auth/login`, {
+          method: 'POST',
+          body: JSON.stringify({
+            phone_number: phone,
+            password: password,
+            device_name: 'Browser'
+          })
+        });
+
+        token = loginData.access_token;
+        localStorage.setItem('access_token', token);
+
+        setStatus(t('statusAuthorized'));
+        showApp(true);
+        await loadMe();
+        await loadChats();
+        openProfilePanel();
+      } catch (e) {
+        registerResult.textContent = e.message;
+      }
+    }
+
+    async function login() {
+      try {
+        loginResult.textContent = '';
+        const phone = entryPhone.value.trim();
+        const password = loginPassword.value;
+
+        if (!phone || !password) throw new Error(t('enterPhonePassword'));
+
+        const data = await apiFetch(`${api}/auth/login`, {
+          method: 'POST',
+          body: JSON.stringify({
+            phone_number: phone,
+            password: password,
+            device_name: 'Browser'
+          })
+        });
+
+        token = data.access_token;
+        localStorage.setItem('access_token', token);
+
+        setStatus(t('statusAuthorized'));
+        showApp(true);
+        await loadMe();
+        await loadChats();
+        openProfilePanel();
+      } catch (e) {
+        loginResult.textContent = e.message;
+      }
+    }
+
+    async function loadMe() {
+      try {
+        const me = await apiFetch(`${api}/users/me`);
+        cachedMe = me;
+
+        meName.textContent = `${me.first_name} ${me.last_name}`.trim();
+        mePhone.textContent = `${me.phone_prefix}${me.phone_number}`;
+        myLinkInfo.textContent = me.username_link || '—';
+
+        profileCardName.textContent = `${me.first_name} ${me.last_name}`.trim();
+        profileCardPhone.textContent = `${me.phone_prefix}${me.phone_number}`;
+        profileCardId.textContent = me.username_link || '—';
+        profileCardBio.textContent = me.bio ? me.bio : t('profileNoBio');
+
+        menuProfileName.textContent = `${me.first_name} ${me.last_name}`.trim();
+        menuProfileId.textContent = me.username_link || '—';
+
+        editFirstName.value = me.first_name || '';
+        editLastName.value = me.last_name || '';
+        editUsername.value = me.username_link || '';
+        editBio.value = me.bio || '';
+      } catch (e) {
+        meName.textContent = 'Ошибка';
+        mePhone.textContent = e.message;
+        myLinkInfo.textContent = '—';
+      }
+    }
+
+    function renderChats(chats){
+      const query = searchInput.value.trim().toLowerCase();
+      chatList.innerHTML = '';
+
+      chats
+        .filter(c => {
+          if (!query) return true;
+          const names = (c.members || []).map(m => `${m.first_name} ${m.last_name} ${m.username_link || ''}`.toLowerCase()).join(' ');
+          return names.includes(query) || String(c.id).includes(query);
+        })
+        .forEach(c => {
+          const item = document.createElement('div');
+          item.className = 'chat-item' + (currentChatId === c.id ? ' active' : '');
+          const names = (c.members || []).map(m => `${m.first_name} ${m.last_name}`.trim()).join(', ');
+          item.innerHTML = `
+            <div class="chat-title">${c.title || (c.is_direct ? t('directChat') : 'Chat')}</div>
+            <div class="chat-sub">${names}</div>
+            <div class="chat-sub">ID: ${c.id}</div>
+          `;
+          item.onclick = () => openChat(c.id, names || ('Chat ' + c.id));
+          chatList.appendChild(item);
+        });
+    }
+
+    function filterChats(){
+      renderChats(chatsCache);
+    }
+
+    async function loadChats() {
+      try {
+        chatsCache = await apiFetch(`${api}/chats`);
+        renderChats(chatsCache);
+      } catch (e) {
+        chatList.innerHTML = `<div class="chat-sub">${e.message}</div>`;
+      }
+    }
+
+    async function createDirectChat() {
+      try {
+        const raw = targetUserId.value.trim();
+        if (!raw) throw new Error(t('enterTarget'));
+
+        let payload;
+        if (raw.startsWith('@')) {
+          payload = { username_link: raw };
+        } else {
+          const numericId = Number(raw);
+          if (Number.isNaN(numericId)) throw new Error(t('enterTargetCorrect'));
+          payload = { user_id: numericId };
+        }
+
+        await apiFetch(`${api}/chats/direct`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        targetUserId.value = '';
+        await loadChats();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function openChat(id, title) {
+      currentChatId = id;
+      chatTitle.textContent = title || ('Chat ' + id);
+      chatMeta.textContent = 'chat_id: ' + id;
+      await loadChats();
+      await loadMessages();
+      connectWs(id);
+    }
+
+    async function loadMessages() {
+      if (!currentChatId) return;
+      try {
+        const msgs = await apiFetch(`${api}/messages/${currentChatId}`);
+        if (!cachedMe) await loadMe();
+
+        messages.innerHTML = '';
+        msgs.forEach(m => {
+          const div = document.createElement('div');
+          div.className = 'msg ' + (cachedMe && m.sender_id === cachedMe.id ? 'me' : 'them');
+          div.textContent = m.body;
+          messages.appendChild(div);
+        });
+        messages.scrollTop = messages.scrollHeight;
+      } catch (e) {
+        messages.innerHTML = `<div class="chat-sub">${e.message}</div>`;
+      }
+    }
+
+    async function sendMessage() {
+      if (!currentChatId) return alert(t('chooseChatFirst'));
+      try {
+        await apiFetch(`${api}/messages/${currentChatId}`, {
+          method: 'POST',
+          body: JSON.stringify({ body: messageText.value })
+        });
+        messageText.value = '';
+        await loadMessages();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function saveProfile(){
+      try {
+        editResult.textContent = '';
+        const payload = {
+          first_name: editFirstName.value.trim(),
+          last_name: editLastName.value.trim(),
+          username_link: editUsername.value.trim(),
+          bio: editBio.value.trim()
+        };
+
+        const updated = await apiFetch(`${api}/users/me`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+
+        cachedMe = updated;
+        await loadMe();
+        openProfilePanel();
+        editResult.textContent = t('saveDone');
+      } catch (e) {
+        editResult.textContent = e.message;
+      }
+    }
+
+    async function deleteMyAccount() {
+      const ok = confirm(t('deleteAccountConfirm'));
+      if (!ok) return;
+
+      try {
+        await apiFetch(`${api}/users/me`, { method: 'DELETE' });
+        logout();
+        alert(t('deleteAccountDone'));
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function resetAllDemoData() {
+      const ok = confirm(t('resetConfirm'));
+      if (!ok) return;
+
+      try {
+        await apiFetch(`${api}/users/dev/reset-all`, { method: 'POST' });
+        logout();
+        alert(t('resetDone'));
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    function connectWs(chatId) {
+      if (ws) ws.close();
+      const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+      ws = new WebSocket(`${proto}://${location.host}/ws/chats/${chatId}`);
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.event === 'new_message' || data.event === 'message_deleted') loadMessages();
+        } catch {}
+      };
+    }
+
+    function logout() {
+      localStorage.removeItem('access_token');
+      token = '';
+      cachedMe = null;
+      currentChatId = null;
+      if (ws) ws.close();
+      setStatus(t('statusUnauthorized'));
+      showApp(false);
+      goToEntry();
+      hideMenus();
+    }
+
+    function hideMenus(){
+      sidebarMenu.classList.add('hidden');
+      profileMenu.classList.add('hidden');
+    }
+
+    function toggleSidebarMenu(){
+      profileMenu.classList.add('hidden');
+      sidebarMenu.classList.toggle('hidden');
+    }
+
+    function toggleProfileMenu(){
+      sidebarMenu.classList.add('hidden');
+      profileMenu.classList.toggle('hidden');
+    }
+
+    function openProfilePanel(){
+      viewPanel.classList.remove('hidden');
+      editPanel.classList.add('hidden');
+      rightPanelTitle.textContent = t('rightPanelTitle');
+      rightPanelSubtitle.textContent = t('rightPanelSubtitle');
+      hideMenus();
+    }
+
+    function openSettingsPanel(){
+      openProfilePanel();
+      hideMenus();
+    }
+
+    function openEditPanel(){
+      viewPanel.classList.add('hidden');
+      editPanel.classList.remove('hidden');
+      rightPanelTitle.textContent = t('editTitle');
+      rightPanelSubtitle.textContent = '';
+      hideMenus();
+    }
+
+    document.addEventListener('click', (e) => {
+      const insideSidebarMenu = sidebarMenu.contains(e.target);
+      const insideProfileMenu = profileMenu.contains(e.target);
+      const sidebarToggle = e.target.closest('.sidebar-top .icon-btn');
+      const profileToggle = e.target.closest('.right-actions .icon-btn');
+
+      if (!insideSidebarMenu && !insideProfileMenu && !sidebarToggle && !profileToggle) {
+        hideMenus();
+      }
     });
 
-    const fd = new FormData();
-    fd.append('user_id', String(regData.user_id));
-    fd.append('first_name', first);
-    fd.append('last_name', last);
-    fd.append('username_link', username);
-
-    const profileRes = await fetch(`${api}/auth/complete-profile`, { method: 'POST', body: fd });
-    const profileData = await parseResponse(profileRes);
-    if (!profileRes.ok) throw new Error(extractError(profileData, 'Ошибка сохранения профиля'));
-
-    const loginData = await apiFetch(`${api}/auth/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        phone_number: phone,
-        password: password,
-        device_name: 'Browser'
-      })
-    });
-
-    token = loginData.access_token;
-    localStorage.setItem('access_token', token);
-
-    setStatus('Авторизован');
-    showApp(true);
-    await loadMe();
-    await loadChats();
-  } catch (e) {
-    registerResult.textContent = e.message;
-  }
-}
-
-async function login() {
-  try {
-    loginResult.textContent = '';
-    const phone = entryPhone.value.trim();
-    const password = loginPassword.value;
-
-    if (!phone || !password) throw new Error('Введи номер и пароль');
-
-    const data = await apiFetch(`${api}/auth/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        phone_number: phone,
-        password: password,
-        device_name: 'Browser'
-      })
-    });
-
-    token = data.access_token;
-    localStorage.setItem('access_token', token);
-
-    setStatus('Авторизован');
-    showApp(true);
-    await loadMe();
-    await loadChats();
-  } catch (e) {
-    loginResult.textContent = e.message;
-  }
-}
-
-async function loadMe() {
-  try {
-    const me = await apiFetch(`${api}/users/me`);
-    cachedMe = me;
-    meName.textContent = `${me.first_name} ${me.last_name}`;
-    mePhone.textContent = `${me.phone_prefix}${me.phone_number}`;
-    myLinkInfo.textContent = me.username_link ? `${me.username_link}` : 'ID не задан';
-  } catch (e) {
-    meName.textContent = 'Ошибка';
-    mePhone.textContent = e.message;
-    myLinkInfo.textContent = '—';
-  }
-}
-
-async function loadChats() {
-  try {
-    const chats = await apiFetch(`${api}/chats`);
-    chatList.innerHTML = '';
-    chats.forEach(c => {
-      const item = document.createElement('div');
-      item.className = 'chat-item' + (currentChatId === c.id ? ' active' : '');
-      const names = (c.members || []).map(m => `${m.first_name} ${m.last_name}`.trim()).join(', ');
-      item.innerHTML = `<strong>${c.title || (c.is_direct ? 'Личный чат' : 'Чат')}</strong><div class="small">${names}</div><div class="small">ID: ${c.id}</div>`;
-      item.onclick = () => openChat(c.id, names || ('Chat ' + c.id));
-      chatList.appendChild(item);
-    });
-  } catch (e) {
-    chatList.innerHTML = `<div class="small">${e.message}</div>`;
-  }
-}
-
-async function createDirectChat() {
-  try {
-    const raw = targetUserId.value.trim();
-    if (!raw) throw new Error('Введи user_id или @id');
-
-    let payload;
-    if (raw.startsWith('@')) {
-      payload = { username_link: raw };
+    if (token) {
+      setStatus(t('statusAuthorized'));
+      showApp(true);
+      loadMe();
+      loadChats();
+      openProfilePanel();
     } else {
-      const numericId = Number(raw);
-      if (Number.isNaN(numericId)) throw new Error('Нужно ввести @id или числовой user_id');
-      payload = { user_id: numericId };
+      setStatus(t('statusUnauthorized'));
+      showApp(false);
+      goToEntry();
     }
 
-    await apiFetch(`${api}/chats/direct`, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    });
-    targetUserId.value = '';
-    await loadChats();
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-async function deleteMyAccount() {
-  const ok = confirm('Удалить текущий аккаунт? Номер и ID освободятся.');
-  if (!ok) return;
-
-  try {
-    await apiFetch(`${api}/users/me`, { method: 'DELETE' });
-    logout();
-    alert('Аккаунт удалён');
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-async function resetAllDemoData() {
-  const ok = confirm('Очистить все тестовые регистрации и чаты?');
-  if (!ok) return;
-
-  try {
-    await apiFetch(`${api}/users/dev/reset-all`, { method: 'POST' });
-    logout();
-    alert('Все тестовые регистрации очищены');
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-async function openChat(id, title) {
-  currentChatId = id;
-  chatTitle.textContent = title || ('Chat ' + id);
-  chatMeta.textContent = 'chat_id: ' + id;
-  await loadChats();
-  await loadMessages();
-  connectWs(id);
-}
-
-async function loadMessages() {
-  if (!currentChatId) return;
-  try {
-    const msgs = await apiFetch(`${api}/messages/${currentChatId}`);
-    if (!cachedMe) await loadMe();
-
-    messages.innerHTML = '';
-    msgs.forEach(m => {
-      const div = document.createElement('div');
-      div.className = 'msg ' + (cachedMe && m.sender_id === cachedMe.id ? 'me' : 'them');
-      div.innerHTML = `<div>${escapeHtml(m.body)}</div><div class="small">message_id: ${m.id}</div>`;
-      messages.appendChild(div);
-    });
-    messages.scrollTop = messages.scrollHeight;
-  } catch (e) {
-    messages.innerHTML = `<div class="small">${e.message}</div>`;
-  }
-}
-
-async function sendMessage() {
-  if (!currentChatId) return alert('Сначала выбери чат');
-  try {
-    await apiFetch(`${api}/messages/${currentChatId}`, {
-      method: 'POST',
-      body: JSON.stringify({ body: messageText.value })
-    });
-    messageText.value = '';
-    await loadMessages();
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-function connectWs(chatId) {
-  if (ws) ws.close();
-  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  ws = new WebSocket(`${proto}://${location.host}/ws/chats/${chatId}`);
-  ws.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      if (data.event === 'new_message' || data.event === 'message_deleted') loadMessages();
-    } catch {}
-  };
-}
-
-function logout() {
-  localStorage.removeItem('access_token');
-  token = '';
-  cachedMe = null;
-  currentChatId = null;
-  if (ws) ws.close();
-  setStatus('Не авторизован');
-  showApp(false);
-  goToEntry();
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-}
-
-if (token) {
-  setStatus('Авторизован');
-  showApp(true);
-  loadMe();
-  loadChats();
-} else {
-  setStatus('Не авторизован');
-  showApp(false);
-  goToEntry();
-}
-</script>
+    applyTranslations();
+  </script>
 </body>
 </html>
