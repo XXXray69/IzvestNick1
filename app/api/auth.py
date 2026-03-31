@@ -7,7 +7,7 @@ import string
 from app.core.db import get_db
 from app.core.security import hash_password, verify_password
 from app.models.user import User
-from app.schemas.auth import CompleteProfileRequest, LoginRequest, RegisterRequest, TokenPairResponse
+from app.schemas.auth import LoginRequest, RegisterRequest, TokenPairResponse
 from app.schemas.user import UserOut
 from app.services.auth_service import issue_session_tokens, normalize_phone
 
@@ -67,11 +67,16 @@ def complete_profile(
     first_name: str = Form(...),
     last_name: str = Form(...),
     username_link: str | None = Form(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     user = db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail='User not found')
+
+    first_name = first_name.strip()
+    last_name = last_name.strip()
+    if not first_name or not last_name:
+        raise HTTPException(status_code=400, detail='First name and last name are required')
 
     prepared_username = normalize_username_link(username_link)
 
@@ -81,18 +86,20 @@ def complete_profile(
                 status_code=400,
                 detail='ID must start with @ and contain only English letters and digits'
             )
+
         exists = db.query(User).filter(
             User.username_link == prepared_username,
             User.id != user.id
         ).first()
         if exists:
             raise HTTPException(status_code=409, detail='ID already taken')
+
         user.username_link = prepared_username
     elif not user.username_link:
         user.username_link = generate_unique_username_link(db)
 
-    user.first_name = first_name.strip()
-    user.last_name = last_name.strip()
+    user.first_name = first_name
+    user.last_name = last_name
 
     db.commit()
     db.refresh(user)
