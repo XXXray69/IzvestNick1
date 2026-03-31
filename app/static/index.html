@@ -69,6 +69,20 @@
       font-size:14px;
     }
 
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:38px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
     .field, .select, textarea{
       width:100%;
       background:var(--panel-3);
@@ -478,6 +492,8 @@
       <p id="authSubtitle">Тёмный мессенджер с бирюзовым акцентом</p>
     </div>
 
+    <div id="statusPill" class="status-pill">Не авторизован</div>
+
     <div class="auth-card stack">
       <div id="authStepPhone" class="stack">
         <h2 id="entryTitle">Вход или регистрация</h2>
@@ -811,7 +827,7 @@
         deleteAccountDone: 'Аккаунт удалён',
         resetConfirm: 'Очистить все тестовые регистрации и чаты?',
         resetDone: 'Все тестовые регистрации очищены',
-        saveDone: 'Изменения сохранены',
+        saveDone: 'Изменения сохранены'
       },
       en: {
         authSubtitle: 'Dark messenger with turquoise accent',
@@ -866,7 +882,7 @@
         deleteAccountDone: 'Account deleted',
         resetConfirm: 'Clear all test registrations and chats?',
         resetDone: 'All test registrations cleared',
-        saveDone: 'Changes saved',
+        saveDone: 'Changes saved'
       }
     };
 
@@ -891,8 +907,6 @@
       createChatBtn.textContent = t('createChatBtn');
       sendBtn.textContent = t('sendBtn');
       refreshMessagesBtn.textContent = t('refreshMessagesBtn');
-      rightPanelTitle.textContent = t('rightPanelTitle');
-      rightPanelSubtitle.textContent = t('rightPanelSubtitle');
       profileCardTitle.textContent = t('profileCardTitle');
       languageTitle.textContent = t('languageTitle');
       actionsTitle.textContent = t('actionsTitle');
@@ -918,7 +932,6 @@
 
       langRuBtn.classList.toggle('active', currentLang === 'ru');
       langEnBtn.classList.toggle('active', currentLang === 'en');
-
       setStatus(token ? t('statusAuthorized') : t('statusUnauthorized'));
     }
 
@@ -959,11 +972,13 @@
       return data;
     }
 
-    function setStatus(text) { statusPill.textContent = text; }
+    function setStatus(text) {
+      if (statusPill) statusPill.textContent = text;
+    }
 
     function showApp(show) {
-      authView.classList.toggle('hidden', show);
-      appView.classList.toggle('hidden', !show);
+      if (authView) authView.classList.toggle('hidden', show);
+      if (appView) appView.classList.toggle('hidden', !show);
     }
 
     function hideAllAuthSteps() {
