@@ -68,25 +68,19 @@ def delete_my_account(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    # Удаляем сообщения пользователя
     db.query(Message).filter(Message.sender_id == current_user.id).delete(synchronize_session=False)
-
-    # Удаляем сессии пользователя
     db.query(DeviceSession).filter(DeviceSession.user_id == current_user.id).delete(synchronize_session=False)
 
-    # Убираем пользователя из чатов
     chats = db.query(Chat).all()
     for chat in chats:
         if current_user.id in {m.id for m in chat.members}:
             chat.members = [m for m in chat.members if m.id != current_user.id]
 
-    # Удаляем пустые direct-чаты и чаты с одним участником
     chats = db.query(Chat).all()
     for chat in chats:
         if len(chat.members) <= 1:
             db.delete(chat)
 
-    # Удаляем самого пользователя
     db.delete(current_user)
     db.commit()
 
@@ -95,7 +89,6 @@ def delete_my_account(
 
 @router.post('/dev/reset-all')
 def reset_all_demo_data(db: Session = Depends(get_db)):
-    # Только для тестового MVP
     for chat in db.query(Chat).all():
         chat.members = []
 
