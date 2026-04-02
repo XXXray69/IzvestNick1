@@ -54,9 +54,7 @@
     .row{display:flex;gap:10px}
     .row>*{flex:1}
 
-    .brand{
-      margin-bottom:12px;
-    }
+    .brand{margin-bottom:12px}
     .brand h1{
       margin:0;
       font-size:42px;
@@ -144,6 +142,7 @@
       border-right:1px solid var(--line);
       padding:10px;
       position:relative;
+      z-index:40;
     }
 
     .sidebar-top{
@@ -199,12 +198,13 @@
       top:58px;
       left:0;
       width:260px;
-      background:rgba(20,27,29,.98);
+      background:rgba(20,27,29,.99);
       border:1px solid var(--line);
       border-radius:18px;
       box-shadow:var(--shadow);
       overflow:hidden;
-      z-index:50;
+      z-index:9999;
+      pointer-events:auto;
     }
 
     .menu-head{
@@ -565,16 +565,15 @@
             <div class="name" id="menuProfileName">—</div>
             <div class="helper" id="menuProfileId">—</div>
           </div>
-          <div class="menu-item" onclick="openProfilePanel()">👤 <span id="menuMyProfile">My Profile</span></div>
-          <div class="menu-item" onclick="openSettingsPanel()">⚙ <span id="menuSettings">Settings</span></div>
-          <div class="menu-item" onclick="resetAllDemoData()">🧹 <span id="menuReset">Clear test data</span></div>
+          <div class="menu-item" onclick="openProfilePanel()">👤 <span id="menuMyProfile">Мой профиль</span></div>
+          <div class="menu-item" onclick="openSettingsPanel()">⚙ <span id="menuSettings">Настройки</span></div>
         </div>
       </div>
 
       <div class="section-tabs">
-        <div class="tab active" id="tabAll">All</div>
-        <div class="tab" id="tabDirect">Direct</div>
-        <div class="tab" id="tabGroups">Groups</div>
+        <div class="tab active" id="tabAll">Все</div>
+        <div class="tab" id="tabDirect">Личные</div>
+        <div class="tab" id="tabGroups">Группы</div>
       </div>
 
       <div class="profile-mini">
@@ -686,18 +685,15 @@
     const statusPill = document.getElementById('statusPill');
     const authView = document.getElementById('authView');
     const appView = document.getElementById('appView');
-
     const authStepPhone = document.getElementById('authStepPhone');
     const authStepLoginPassword = document.getElementById('authStepLoginPassword');
     const authStepRegister = document.getElementById('authStepRegister');
-
     const entryPhone = document.getElementById('entryPhone');
     const entryResult = document.getElementById('entryResult');
     const loginResult = document.getElementById('loginResult');
     const registerResult = document.getElementById('registerResult');
     const loginPhonePreview = document.getElementById('loginPhonePreview');
     const loginPassword = document.getElementById('loginPassword');
-
     const regPrefix = document.getElementById('regPrefix');
     const regPhone = document.getElementById('regPhone');
     const regPassword = document.getElementById('regPassword');
@@ -705,7 +701,6 @@
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
     const usernameLink = document.getElementById('usernameLink');
-
     const searchInput = document.getElementById('searchInput');
     const targetUserId = document.getElementById('targetUserId');
     const chatList = document.getElementById('chatList');
@@ -713,33 +708,26 @@
     const chatMeta = document.getElementById('chatMeta');
     const messages = document.getElementById('messages');
     const messageText = document.getElementById('messageText');
-
     const meName = document.getElementById('meName');
     const mePhone = document.getElementById('mePhone');
     const myLinkInfo = document.getElementById('myLinkInfo');
-
     const profileCardName = document.getElementById('profileCardName');
     const profileCardPhone = document.getElementById('profileCardPhone');
     const profileCardId = document.getElementById('profileCardId');
     const profileCardBio = document.getElementById('profileCardBio');
-
     const menuProfileName = document.getElementById('menuProfileName');
     const menuProfileId = document.getElementById('menuProfileId');
-
     const sidebarMenu = document.getElementById('sidebarMenu');
     const profileMenu = document.getElementById('profileMenu');
-
     const viewPanel = document.getElementById('viewPanel');
     const editPanel = document.getElementById('editPanel');
     const rightPanelTitle = document.getElementById('rightPanelTitle');
     const rightPanelSubtitle = document.getElementById('rightPanelSubtitle');
-
     const editFirstName = document.getElementById('editFirstName');
     const editLastName = document.getElementById('editLastName');
     const editUsername = document.getElementById('editUsername');
     const editBio = document.getElementById('editBio');
     const editResult = document.getElementById('editResult');
-
     const authSubtitle = document.getElementById('authSubtitle');
     const entryTitle = document.getElementById('entryTitle');
     const entryHint = document.getElementById('entryHint');
@@ -769,7 +757,6 @@
     const logoutMenuText = document.getElementById('logoutMenuText');
     const menuMyProfile = document.getElementById('menuMyProfile');
     const menuSettings = document.getElementById('menuSettings');
-    const menuReset = document.getElementById('menuReset');
     const langRuBtn = document.getElementById('langRuBtn');
     const langEnBtn = document.getElementById('langEnBtn');
 
@@ -806,7 +793,6 @@
         logoutMenuText: 'Выйти',
         menuMyProfile: 'Мой профиль',
         menuSettings: 'Настройки',
-        menuReset: 'Очистить тестовые данные',
         searchPlaceholder: 'Поиск',
         targetPlaceholder: '@id или user_id',
         messagePlaceholder: 'Напиши сообщение',
@@ -825,8 +811,6 @@
         chooseChatFirst: 'Сначала выбери чат',
         deleteAccountConfirm: 'Удалить текущий аккаунт? Номер и ID освободятся.',
         deleteAccountDone: 'Аккаунт удалён',
-        resetConfirm: 'Очистить все тестовые регистрации и чаты?',
-        resetDone: 'Все тестовые регистрации очищены',
         saveDone: 'Изменения сохранены'
       },
       en: {
@@ -861,7 +845,6 @@
         logoutMenuText: 'Log out',
         menuMyProfile: 'My profile',
         menuSettings: 'Settings',
-        menuReset: 'Clear test data',
         searchPlaceholder: 'Search',
         targetPlaceholder: '@id or user_id',
         messagePlaceholder: 'Write a message',
@@ -880,8 +863,6 @@
         chooseChatFirst: 'Choose a chat first',
         deleteAccountConfirm: 'Delete current account? The number and ID will be released.',
         deleteAccountDone: 'Account deleted',
-        resetConfirm: 'Clear all test registrations and chats?',
-        resetDone: 'All test registrations cleared',
         saveDone: 'Changes saved'
       }
     };
@@ -907,6 +888,8 @@
       createChatBtn.textContent = t('createChatBtn');
       sendBtn.textContent = t('sendBtn');
       refreshMessagesBtn.textContent = t('refreshMessagesBtn');
+      rightPanelTitle.textContent = t('rightPanelTitle');
+      rightPanelSubtitle.textContent = t('rightPanelSubtitle');
       profileCardTitle.textContent = t('profileCardTitle');
       languageTitle.textContent = t('languageTitle');
       actionsTitle.textContent = t('actionsTitle');
@@ -918,7 +901,6 @@
       logoutMenuText.textContent = t('logoutMenuText');
       menuMyProfile.textContent = t('menuMyProfile');
       menuSettings.textContent = t('menuSettings');
-      menuReset.textContent = t('menuReset');
 
       searchInput.placeholder = t('searchPlaceholder');
       targetUserId.placeholder = t('targetPlaceholder');
@@ -1270,19 +1252,6 @@
         await apiFetch(`${api}/users/me`, { method: 'DELETE' });
         logout();
         alert(t('deleteAccountDone'));
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    async function resetAllDemoData() {
-      const ok = confirm(t('resetConfirm'));
-      if (!ok) return;
-
-      try {
-        await apiFetch(`${api}/users/dev/reset-all`, { method: 'POST' });
-        logout();
-        alert(t('resetDone'));
       } catch (e) {
         alert(e.message);
       }
