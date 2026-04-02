@@ -123,8 +123,8 @@ def delete_my_account(
 
     chats = db.query(Chat).all()
     for chat in chats:
-        if current_user.id in {m.id for m in chat.members}:
-            chat.members = [m for m in chat.members if m.id != current_user.id]
+      if current_user.id in {m.id for m in chat.members}:
+          chat.members = [m for m in chat.members if m.id != current_user.id]
 
     chats = db.query(Chat).all()
     for chat in chats:
@@ -135,17 +135,3 @@ def delete_my_account(
     db.commit()
 
     return {'status': 'deleted'}
-
-
-@router.post('/dev/reset-all')
-def reset_all_demo_data(db: Session = Depends(get_db)):
-    for chat in db.query(Chat).all():
-        chat.members = []
-
-    db.query(Message).delete(synchronize_session=False)
-    db.query(DeviceSession).delete(synchronize_session=False)
-    db.query(Chat).delete(synchronize_session=False)
-    db.query(User).delete(synchronize_session=False)
-    db.commit()
-
-    return {'status': 'reset'}
