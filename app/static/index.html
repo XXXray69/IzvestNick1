@@ -575,9 +575,48 @@
       border-top:1px solid var(--line);
       background:rgba(255,255,255,.02);
     }
-    .composer textarea{
-      min-height:84px;
+
+    .message-bar{
+      display:flex;
+      align-items:flex-end;
+      gap:12px;
+      background:var(--panel-3);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:10px;
+    }
+
+    .message-input{
+      flex:1;
+      min-height:60px;
+      max-height:180px;
       resize:vertical;
+      border:none;
+      background:transparent;
+      box-shadow:none !important;
+      padding:12px 8px;
+    }
+
+    .message-input:focus{
+      border:none;
+      outline:none;
+      box-shadow:none !important;
+    }
+
+    .send-fab{
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      border:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      flex:0 0 auto;
+      color:#051314;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 8px 24px rgba(34,199,196,.22);
     }
 
     @media (max-width: 980px){
@@ -706,10 +745,9 @@
       <div id="messages" class="messages"></div>
 
       <div class="composer">
-        <textarea id="messageText" class="field" placeholder="Напиши сообщение"></textarea>
-        <div class="row">
-          <button class="btn" id="sendBtn" onclick="sendMessage()">Отправить</button>
-          <button class="btn secondary" id="refreshMessagesBtn" onclick="loadMessages()">Обновить сообщения</button>
+        <div class="message-bar">
+          <textarea id="messageText" class="message-input" placeholder="Напиши сообщение"></textarea>
+          <button id="sendFab" class="send-fab" onclick="sendMessage()" title="Отправить письмо">✉</button>
         </div>
       </div>
     </section>
@@ -725,6 +763,7 @@
     let chatsCache = [];
     let currentLang = localStorage.getItem('lang') || 'ru';
     let leftMode = 'chats';
+    let autoRefreshTimer = null;
 
     const localSettingsKey = 'izvestnick_settings_v1';
     const localSettings = loadLocalSettings();
@@ -781,14 +820,13 @@
     const regHint = document.getElementById('regHint');
     const backBtn2 = document.getElementById('backBtn2');
     const createAccountBtn = document.getElementById('createAccountBtn');
-    const sendBtn = document.getElementById('sendBtn');
-    const refreshMessagesBtn = document.getElementById('refreshMessagesBtn');
     const logoutMenuText = document.getElementById('logoutMenuText');
     const deleteAccountMenuText = document.getElementById('deleteAccountMenuText');
     const menuMyProfile = document.getElementById('menuMyProfile');
     const menuSettings = document.getElementById('menuSettings');
     const menuLanguage = document.getElementById('menuLanguage');
     const menuEdit = document.getElementById('menuEdit');
+    const sendFab = document.getElementById('sendFab');
 
     const i18n = {
       ru: {
@@ -804,8 +842,6 @@
         regHint: 'ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.',
         backBtn2: 'Назад',
         createAccountBtn: 'Создать аккаунт',
-        sendBtn: 'Отправить',
-        refreshMessagesBtn: 'Обновить сообщения',
         searchPlaceholder: 'Поиск',
         targetPlaceholder: '@id или user_id',
         messagePlaceholder: 'Напиши сообщение',
@@ -821,6 +857,7 @@
         enterTarget: 'Введи user_id или @id',
         enterTargetCorrect: 'Нужно ввести @id или числовой user_id',
         chooseChatFirst: 'Сначала выбери чат',
+        emptyMessage: 'Введите сообщение',
         deleteAccountConfirm: 'Удалить текущий аккаунт? Номер и ID освободятся.',
         deleteAccountDone: 'Аккаунт удалён',
         saveDone: 'Изменения сохранены',
@@ -858,7 +895,6 @@
         activeSessionsValue: 'Текущий браузер',
         stickersEmoji: 'Stickers and Emoji',
         stickersEmojiValue: 'Стикеры и эмодзи',
-        backToChats: 'Назад к чатам',
         currentLanguage: 'Текущий язык',
         save: 'Подтвердить',
         back: 'Назад',
@@ -866,11 +902,10 @@
         lastName: 'Фамилия',
         bio: 'Bio',
         profileId: 'ID, например @myid',
-        chatsHeaderTitle: 'Чаты',
-        chatsHeaderSubtitle: 'Поиск, создание и список переписок',
         currentSession: 'Текущая сессия',
         languageEnglish: 'English',
-        languageRussian: 'Русский'
+        languageRussian: 'Русский',
+        sendMail: 'Отправить письмо'
       },
       en: {
         authSubtitle: 'Dark messenger with turquoise accent',
@@ -885,8 +920,6 @@
         regHint: 'ID must start with @ and contain only English letters and digits. If left empty, it will be generated automatically.',
         backBtn2: 'Back',
         createAccountBtn: 'Create account',
-        sendBtn: 'Send',
-        refreshMessagesBtn: 'Refresh messages',
         searchPlaceholder: 'Search',
         targetPlaceholder: '@id or user_id',
         messagePlaceholder: 'Write a message',
@@ -902,6 +935,7 @@
         enterTarget: 'Enter user_id or @id',
         enterTargetCorrect: 'Enter @id or numeric user_id',
         chooseChatFirst: 'Choose a chat first',
+        emptyMessage: 'Enter a message',
         deleteAccountConfirm: 'Delete current account? The number and ID will be released.',
         deleteAccountDone: 'Account deleted',
         saveDone: 'Changes saved',
@@ -939,7 +973,6 @@
         activeSessionsValue: 'Current browser',
         stickersEmoji: 'Stickers and Emoji',
         stickersEmojiValue: 'Stickers and emoji',
-        backToChats: 'Back to chats',
         currentLanguage: 'Current language',
         save: 'Confirm',
         back: 'Back',
@@ -947,11 +980,10 @@
         lastName: 'Last name',
         bio: 'Bio',
         profileId: 'ID, for example @myid',
-        chatsHeaderTitle: 'Chats',
-        chatsHeaderSubtitle: 'Search, create and browse conversations',
         currentSession: 'Current session',
         languageEnglish: 'English',
-        languageRussian: 'Русский'
+        languageRussian: 'Русский',
+        sendMail: 'Send mail'
       }
     };
 
@@ -990,8 +1022,6 @@
       regHint.textContent = t('regHint');
       backBtn2.textContent = t('back');
       createAccountBtn.textContent = t('createAccountBtn');
-      sendBtn.textContent = t('sendBtn');
-      refreshMessagesBtn.textContent = t('refreshMessagesBtn');
       logoutMenuText.textContent = t('logout');
       deleteAccountMenuText.textContent = t('deleteAccount');
       menuMyProfile.textContent = t('myProfile');
@@ -1001,6 +1031,7 @@
 
       searchInput.placeholder = t('searchPlaceholder');
       messageText.placeholder = t('messagePlaceholder');
+      sendFab.title = t('sendMail');
 
       if (!currentChatId) {
         chatTitle.textContent = t('chooseChat');
@@ -1062,6 +1093,7 @@
       cachedMe = null;
       currentChatId = null;
       if (ws) ws.close();
+      stopAutoRefresh();
       setStatus(t('statusUnauthorized'));
       showApp(false);
       goToEntry();
@@ -1074,8 +1106,8 @@
     }
 
     function showApp(show) {
-      if (authView) authView.classList.toggle('hidden', show);
-      if (appView) appView.classList.toggle('hidden', !show);
+      authView.classList.toggle('hidden', show);
+      appView.classList.toggle('hidden', !show);
     }
 
     function hideAllAuthSteps() {
@@ -1608,6 +1640,7 @@
       await loadChats();
       await loadMessages();
       connectWs(id);
+      startAutoRefresh();
     }
 
     async function loadMessages() {
@@ -1616,6 +1649,9 @@
         const msgs = await apiFetch(`${api}/messages/${currentChatId}`);
         if (!cachedMe) await loadMe();
 
+        const oldHeight = messages.scrollHeight;
+        const nearBottom = messages.scrollTop + messages.clientHeight >= oldHeight - 120;
+
         messages.innerHTML = '';
         msgs.forEach(m => {
           const div = document.createElement('div');
@@ -1623,7 +1659,10 @@
           div.textContent = m.body;
           messages.appendChild(div);
         });
-        messages.scrollTop = messages.scrollHeight;
+
+        if (nearBottom) {
+          messages.scrollTop = messages.scrollHeight;
+        }
       } catch (e) {
         messages.innerHTML = `<div class="chat-sub">${escapeHtml(e.message)}</div>`;
       }
@@ -1631,12 +1670,17 @@
 
     async function sendMessage() {
       if (!currentChatId) return alert(t('chooseChatFirst'));
+
+      const body = messageText.value.trim();
+      if (!body) return alert(t('emptyMessage'));
+
       try {
         await apiFetch(`${api}/messages/${currentChatId}`, {
           method: 'POST',
-          body: JSON.stringify({ body: messageText.value })
+          body: JSON.stringify({ body })
         });
         messageText.value = '';
+        autoResizeMessageInput();
         await loadMessages();
       } catch (e) {
         alert(e.message);
@@ -1693,9 +1737,27 @@
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.event === 'new_message' || data.event === 'message_deleted') loadMessages();
+          if (data.event === 'new_message' || data.event === 'message_deleted') {
+            loadMessages();
+          }
         } catch {}
       };
+    }
+
+    function startAutoRefresh() {
+      stopAutoRefresh();
+      autoRefreshTimer = setInterval(() => {
+        if (currentChatId && token) {
+          loadMessages();
+        }
+      }, 3000);
+    }
+
+    function stopAutoRefresh() {
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
     }
 
     function logout() {
@@ -1704,6 +1766,7 @@
       cachedMe = null;
       currentChatId = null;
       if (ws) ws.close();
+      stopAutoRefresh();
       setStatus(t('statusUnauthorized'));
       showApp(false);
       goToEntry();
@@ -1759,12 +1822,21 @@
       if (leftMode === 'edit') renderEditView();
     }
 
-    function showApp(show) {
-      authView.classList.toggle('hidden', show);
-      appView.classList.toggle('hidden', !show);
+    function autoResizeMessageInput() {
+      messageText.style.height = '60px';
+      messageText.style.height = Math.min(messageText.scrollHeight, 180) + 'px';
     }
 
+    messageText.addEventListener('input', autoResizeMessageInput);
+    messageText.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
     applyTranslations();
+    autoResizeMessageInput();
 
     if (token) {
       setStatus(t('statusAuthorized'));
