@@ -140,16 +140,22 @@
     .sidebar{
       background:linear-gradient(180deg,#11181a 0%, #161f22 100%);
       border-right:1px solid var(--line);
-      padding:10px;
       position:relative;
       z-index:40;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+
+    .sidebar-header{
+      padding:10px;
+      border-bottom:1px solid var(--line);
     }
 
     .sidebar-top{
       display:flex;
       align-items:center;
       gap:10px;
-      margin-bottom:10px;
       position:relative;
     }
 
@@ -165,6 +171,7 @@
       color:var(--text);
       cursor:pointer;
       font-size:20px;
+      flex:0 0 auto;
     }
 
     .search-wrap{
@@ -197,14 +204,13 @@
       position:absolute;
       top:58px;
       left:0;
-      width:260px;
+      width:280px;
       background:rgba(20,27,29,.99);
       border:1px solid var(--line);
       border-radius:18px;
       box-shadow:var(--shadow);
       overflow:hidden;
       z-index:9999;
-      pointer-events:auto;
     }
 
     .menu-head{
@@ -232,11 +238,59 @@
       background:rgba(34,199,196,.08);
     }
 
+    .left-panel{
+      flex:1;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .left-view{
+      flex:1;
+      min-height:0;
+      overflow:auto;
+      padding:10px;
+    }
+
+    .left-topline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .left-back{
+      width:44px;
+      height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      color:var(--text);
+      cursor:pointer;
+      font-size:20px;
+      flex:0 0 auto;
+    }
+
+    .left-title{
+      font-size:30px;
+      font-weight:800;
+      line-height:1.1;
+    }
+
+    .left-subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+      line-height:1.35;
+    }
+
     .section-tabs{
       display:flex;
       gap:10px;
       margin:10px 0 12px;
-      padding:0 6px;
       flex-wrap:wrap;
     }
 
@@ -260,7 +314,7 @@
       border:1px solid rgba(34,199,196,.18);
       border-radius:18px;
       padding:14px;
-      margin:0 6px 12px;
+      margin-bottom:12px;
     }
 
     .profile-mini .name{
@@ -278,16 +332,14 @@
     .chat-create{
       display:flex;
       gap:10px;
-      margin:0 6px 12px;
+      margin-bottom:12px;
     }
 
     .chat-list{
       display:flex;
       flex-direction:column;
       gap:8px;
-      padding:0 6px;
-      max-height:calc(100vh - 290px);
-      overflow:auto;
+      padding-bottom:10px;
     }
 
     .chat-item{
@@ -316,15 +368,133 @@
       line-height:1.4;
     }
 
-    .main{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 360px;
-      min-height:100vh;
+    .panel-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      margin-bottom:12px;
     }
 
-    .chat-panel{
+    .panel-card h4{
+      margin:0 0 10px;
+      font-size:17px;
+    }
+
+    .panel-note{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .settings-list{
       display:flex;
       flex-direction:column;
+      gap:10px;
+    }
+
+    .settings-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      cursor:pointer;
+    }
+
+    .settings-item:hover{
+      border-color:rgba(34,199,196,.22);
+      background:rgba(34,199,196,.06);
+    }
+
+    .settings-item .label{
+      font-weight:700;
+    }
+
+    .settings-item .value{
+      color:var(--muted);
+      font-size:13px;
+      text-align:right;
+    }
+
+    .toggle-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:12px 0;
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+
+    .toggle-row:last-child{
+      border-bottom:none;
+    }
+
+    .switch{
+      width:56px;
+      height:32px;
+      border-radius:999px;
+      background:var(--panel-3);
+      border:1px solid var(--line);
+      position:relative;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+
+    .switch.active{
+      background:rgba(34,199,196,.22);
+      border-color:rgba(34,199,196,.35);
+    }
+
+    .switch::after{
+      content:"";
+      position:absolute;
+      top:4px;
+      left:4px;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:#fff;
+      transition:.2s;
+    }
+
+    .switch.active::after{
+      left:28px;
+      background:var(--accent);
+    }
+
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .lang-chip{
+      flex:1;
+      padding:10px 12px;
+      border-radius:14px;
+      background:var(--panel-3);
+      border:1px solid var(--line);
+      text-align:center;
+      cursor:pointer;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .lang-chip.active{
+      color:var(--text);
+      background:var(--accent-soft);
+      border-color:rgba(34,199,196,.25);
+    }
+
+    .main{
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
       background:linear-gradient(180deg,#101517 0%, #131a1c 100%);
     }
 
@@ -346,6 +516,25 @@
     .chat-top .sub{
       font-size:13px;
       color:var(--muted);
+    }
+
+    .chat-top-actions{
+      display:flex;
+      gap:8px;
+      position:relative;
+    }
+
+    .profile-menu{
+      position:absolute;
+      right:0;
+      top:52px;
+      width:220px;
+      background:rgba(20,27,29,.98);
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      z-index:60;
     }
 
     .messages{
@@ -391,97 +580,10 @@
       resize:vertical;
     }
 
-    .right-panel{
-      border-left:1px solid var(--line);
-      background:linear-gradient(180deg,#11181a 0%, #161f22 100%);
-      padding:16px;
-    }
-
-    .right-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .right-title{
-      font-size:28px;
-      font-weight:800;
-      margin-bottom:4px;
-    }
-
-    .right-actions{
-      display:flex;
-      gap:8px;
-      position:relative;
-    }
-
-    .profile-menu{
-      position:absolute;
-      right:0;
-      top:52px;
-      width:220px;
-      background:rgba(20,27,29,.98);
-      border:1px solid var(--line);
-      border-radius:18px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      z-index:40;
-    }
-
-    .panel-card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:14px;
-      margin-bottom:12px;
-    }
-
-    .panel-card h4{
-      margin:0 0 10px;
-      font-size:17px;
-    }
-
-    .panel-note{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.45;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
-
-    .lang-switch{
-      display:flex;
-      gap:8px;
-      margin-top:8px;
-    }
-
-    .lang-chip{
-      flex:1;
-      padding:10px 12px;
-      border-radius:14px;
-      background:var(--panel-3);
-      border:1px solid var(--line);
-      text-align:center;
-      cursor:pointer;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .lang-chip.active{
-      color:var(--text);
-      background:var(--accent-soft);
-      border-color:rgba(34,199,196,.25);
-    }
-
-    @media (max-width: 1200px){
-      .main{grid-template-columns:1fr}
-      .right-panel{border-left:none;border-top:1px solid var(--line)}
-    }
-
-    @media (max-width: 900px){
+    @media (max-width: 980px){
       .app-shell{grid-template-columns:1fr}
-      .sidebar{border-right:none;border-bottom:1px solid var(--line)}
+      .sidebar{min-height:auto;border-right:none;border-bottom:1px solid var(--line)}
+      .left-view{max-height:50vh}
     }
   </style>
 </head>
@@ -552,148 +654,96 @@
 
   <div id="appView" class="app-shell hidden">
     <aside class="sidebar">
-      <div class="sidebar-top">
-        <button class="icon-btn" id="sidebarToggleBtn" onclick="toggleSidebarMenu()">☰</button>
+      <div class="sidebar-header">
+        <div class="sidebar-top">
+          <button class="icon-btn" id="sidebarToggleBtn" onclick="toggleSidebarMenu()">☰</button>
 
-        <div class="search-wrap">
-          <span class="search-icon">⌕</span>
-          <input id="searchInput" class="search-input" placeholder="Search" oninput="filterChats()" />
-        </div>
-
-        <div id="sidebarMenu" class="sidebar-menu hidden">
-          <div class="menu-head">
-            <div class="name" id="menuProfileName">—</div>
-            <div class="helper" id="menuProfileId">—</div>
+          <div class="search-wrap">
+            <span class="search-icon">⌕</span>
+            <input id="searchInput" class="search-input" placeholder="Поиск" oninput="filterChats()" />
           </div>
-          <div class="menu-item" onclick="openProfilePanel()">👤 <span id="menuMyProfile">Мой профиль</span></div>
-          <div class="menu-item" onclick="openSettingsPanel()">⚙ <span id="menuSettings">Настройки</span></div>
+
+          <div id="sidebarMenu" class="sidebar-menu hidden">
+            <div class="menu-head">
+              <div class="name" id="menuProfileName">—</div>
+              <div class="helper" id="menuProfileId">—</div>
+            </div>
+            <div class="menu-item" onclick="openProfileView()">👤 <span id="menuMyProfile">Мой профиль</span></div>
+            <div class="menu-item" onclick="openSettingsView()">⚙ <span id="menuSettings">Настройки</span></div>
+            <div class="menu-item" onclick="openLanguageSetting()">🌐 <span id="menuLanguage">Язык</span></div>
+            <div class="menu-item" onclick="openEditProfile()">✎ <span id="menuEdit">Редактировать</span></div>
+          </div>
         </div>
       </div>
 
-      <div class="section-tabs">
-        <div class="tab active" id="tabAll">Все</div>
-        <div class="tab" id="tabDirect">Личные</div>
-        <div class="tab" id="tabGroups">Группы</div>
+      <div class="left-panel">
+        <div id="leftViewChats" class="left-view"></div>
+        <div id="leftViewProfile" class="left-view hidden"></div>
+        <div id="leftViewSettings" class="left-view hidden"></div>
+        <div id="leftViewSettingDetail" class="left-view hidden"></div>
+        <div id="leftViewEdit" class="left-view hidden"></div>
       </div>
-
-      <div class="profile-mini">
-        <div class="name" id="meName">—</div>
-        <div class="meta" id="mePhone">—</div>
-        <div class="meta" id="myLinkInfo">—</div>
-      </div>
-
-      <div class="chat-create">
-        <input id="targetUserId" class="field" placeholder="@id или user_id" />
-        <button class="btn" id="createChatBtn" onclick="createDirectChat()">Создать чат</button>
-      </div>
-
-      <div id="chatList" class="chat-list"></div>
     </aside>
 
     <section class="main">
-      <div class="chat-panel">
-        <div class="chat-top">
-          <div>
-            <div class="title" id="chatTitle">Выбери чат</div>
-            <div class="sub" id="chatMeta">Открой существующий чат или найди пользователя по @ID</div>
-          </div>
+      <div class="chat-top">
+        <div>
+          <div class="title" id="chatTitle">Выбери чат</div>
+          <div class="sub" id="chatMeta">Открой существующий чат или найди пользователя по @ID</div>
         </div>
 
-        <div id="messages" class="messages"></div>
+        <div class="chat-top-actions">
+          <button class="icon-btn" id="editPanelBtn" onclick="openEditProfile()">✎</button>
+          <button class="icon-btn" id="profileMenuBtn" onclick="toggleProfileMenu()">⋮</button>
 
-        <div class="composer">
-          <textarea id="messageText" class="field" placeholder="Напиши сообщение"></textarea>
-          <div class="row">
-            <button class="btn" id="sendBtn" onclick="sendMessage()">Отправить</button>
-            <button class="btn secondary" id="refreshMessagesBtn" onclick="loadMessages()">Обновить сообщения</button>
+          <div id="profileMenu" class="profile-menu hidden">
+            <div class="menu-item" onclick="logout()">↪ <span id="logoutMenuText">Выйти</span></div>
+            <div class="menu-item" onclick="deleteMyAccount()">🗑 <span id="deleteAccountMenuText">Удалить аккаунт</span></div>
           </div>
         </div>
       </div>
 
-      <aside class="right-panel">
-        <div class="right-top">
-          <div>
-            <div class="right-title" id="rightPanelTitle">Профиль</div>
-            <div class="panel-note" id="rightPanelSubtitle">Имя, номер, ID и управление аккаунтом</div>
-          </div>
+      <div id="messages" class="messages"></div>
 
-          <div class="right-actions">
-            <button class="icon-btn" id="editPanelBtn" onclick="openEditPanel()">✎</button>
-            <button class="icon-btn" id="profileMenuBtn" onclick="toggleProfileMenu()">⋮</button>
-
-            <div id="profileMenu" class="profile-menu hidden">
-              <div class="menu-item" onclick="logout()">↪ <span id="logoutMenuText">Выйти</span></div>
-            </div>
-          </div>
+      <div class="composer">
+        <textarea id="messageText" class="field" placeholder="Напиши сообщение"></textarea>
+        <div class="row">
+          <button class="btn" id="sendBtn" onclick="sendMessage()">Отправить</button>
+          <button class="btn secondary" id="refreshMessagesBtn" onclick="loadMessages()">Обновить сообщения</button>
         </div>
-
-        <div id="viewPanel">
-          <div class="panel-card">
-            <h4 id="profileCardTitle">Мой профиль</h4>
-            <div class="panel-note" id="profileCardName">—</div>
-            <div class="panel-note" id="profileCardPhone">—</div>
-            <div class="panel-note" id="profileCardId">—</div>
-            <div class="panel-note" id="profileCardBio">—</div>
-          </div>
-
-          <div class="panel-card">
-            <h4 id="languageTitle">Язык</h4>
-            <div class="lang-switch">
-              <div class="lang-chip active" id="langRuBtn" onclick="setLang('ru')">Русский</div>
-              <div class="lang-chip" id="langEnBtn" onclick="setLang('en')">English</div>
-            </div>
-          </div>
-
-          <div class="panel-card">
-            <h4 id="actionsTitle">Действия</h4>
-            <div class="stack">
-              <button class="btn secondary" id="refreshChatsBtn" onclick="loadChats()">Обновить чаты</button>
-              <button class="btn danger" id="deleteAccountBtn" onclick="deleteMyAccount()">Удалить мой аккаунт</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="editPanel" class="hidden">
-          <div class="panel-card">
-            <h4 id="editTitle">Редактирование профиля</h4>
-            <div class="stack">
-              <input id="editFirstName" class="field" placeholder="Имя" />
-              <input id="editLastName" class="field" placeholder="Фамилия" />
-              <input id="editUsername" class="field" placeholder="ID, например @myid" />
-              <textarea id="editBio" class="field" placeholder="Bio"></textarea>
-              <div class="row">
-                <button class="btn ghost" id="cancelEditBtn" onclick="openProfilePanel()">Назад</button>
-                <button class="btn" id="saveEditBtn" onclick="saveProfile()">Подтвердить</button>
-              </div>
-              <div id="editResult" class="status-box"></div>
-            </div>
-          </div>
-        </div>
-      </aside>
+      </div>
     </section>
   </div>
 
   <script>
     const api = '/api/v1';
+
     let token = localStorage.getItem('access_token') || '';
     let currentChatId = null;
     let ws = null;
     let cachedMe = null;
     let chatsCache = [];
     let currentLang = localStorage.getItem('lang') || 'ru';
+    let leftMode = 'chats';
+
+    const localSettingsKey = 'izvestnick_settings_v1';
+    const localSettings = loadLocalSettings();
 
     const statusPill = document.getElementById('statusPill');
     const authView = document.getElementById('authView');
     const appView = document.getElementById('appView');
+
     const authStepPhone = document.getElementById('authStepPhone');
     const authStepLoginPassword = document.getElementById('authStepLoginPassword');
     const authStepRegister = document.getElementById('authStepRegister');
+
     const entryPhone = document.getElementById('entryPhone');
     const entryResult = document.getElementById('entryResult');
     const loginResult = document.getElementById('loginResult');
     const registerResult = document.getElementById('registerResult');
     const loginPhonePreview = document.getElementById('loginPhonePreview');
     const loginPassword = document.getElementById('loginPassword');
+
     const regPrefix = document.getElementById('regPrefix');
     const regPhone = document.getElementById('regPhone');
     const regPassword = document.getElementById('regPassword');
@@ -701,33 +751,24 @@
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
     const usernameLink = document.getElementById('usernameLink');
+
     const searchInput = document.getElementById('searchInput');
-    const targetUserId = document.getElementById('targetUserId');
-    const chatList = document.getElementById('chatList');
     const chatTitle = document.getElementById('chatTitle');
     const chatMeta = document.getElementById('chatMeta');
     const messages = document.getElementById('messages');
     const messageText = document.getElementById('messageText');
-    const meName = document.getElementById('meName');
-    const mePhone = document.getElementById('mePhone');
-    const myLinkInfo = document.getElementById('myLinkInfo');
-    const profileCardName = document.getElementById('profileCardName');
-    const profileCardPhone = document.getElementById('profileCardPhone');
-    const profileCardId = document.getElementById('profileCardId');
-    const profileCardBio = document.getElementById('profileCardBio');
+
     const menuProfileName = document.getElementById('menuProfileName');
     const menuProfileId = document.getElementById('menuProfileId');
     const sidebarMenu = document.getElementById('sidebarMenu');
     const profileMenu = document.getElementById('profileMenu');
-    const viewPanel = document.getElementById('viewPanel');
-    const editPanel = document.getElementById('editPanel');
-    const rightPanelTitle = document.getElementById('rightPanelTitle');
-    const rightPanelSubtitle = document.getElementById('rightPanelSubtitle');
-    const editFirstName = document.getElementById('editFirstName');
-    const editLastName = document.getElementById('editLastName');
-    const editUsername = document.getElementById('editUsername');
-    const editBio = document.getElementById('editBio');
-    const editResult = document.getElementById('editResult');
+
+    const leftViewChats = document.getElementById('leftViewChats');
+    const leftViewProfile = document.getElementById('leftViewProfile');
+    const leftViewSettings = document.getElementById('leftViewSettings');
+    const leftViewSettingDetail = document.getElementById('leftViewSettingDetail');
+    const leftViewEdit = document.getElementById('leftViewEdit');
+
     const authSubtitle = document.getElementById('authSubtitle');
     const entryTitle = document.getElementById('entryTitle');
     const entryHint = document.getElementById('entryHint');
@@ -740,25 +781,14 @@
     const regHint = document.getElementById('regHint');
     const backBtn2 = document.getElementById('backBtn2');
     const createAccountBtn = document.getElementById('createAccountBtn');
-    const tabAll = document.getElementById('tabAll');
-    const tabDirect = document.getElementById('tabDirect');
-    const tabGroups = document.getElementById('tabGroups');
-    const createChatBtn = document.getElementById('createChatBtn');
     const sendBtn = document.getElementById('sendBtn');
     const refreshMessagesBtn = document.getElementById('refreshMessagesBtn');
-    const profileCardTitle = document.getElementById('profileCardTitle');
-    const languageTitle = document.getElementById('languageTitle');
-    const actionsTitle = document.getElementById('actionsTitle');
-    const refreshChatsBtn = document.getElementById('refreshChatsBtn');
-    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-    const editTitle = document.getElementById('editTitle');
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-    const saveEditBtn = document.getElementById('saveEditBtn');
     const logoutMenuText = document.getElementById('logoutMenuText');
+    const deleteAccountMenuText = document.getElementById('deleteAccountMenuText');
     const menuMyProfile = document.getElementById('menuMyProfile');
     const menuSettings = document.getElementById('menuSettings');
-    const langRuBtn = document.getElementById('langRuBtn');
-    const langEnBtn = document.getElementById('langEnBtn');
+    const menuLanguage = document.getElementById('menuLanguage');
+    const menuEdit = document.getElementById('menuEdit');
 
     const i18n = {
       ru: {
@@ -774,29 +804,11 @@
         regHint: 'ID должен начинаться с @ и содержать только английские буквы и цифры. Если оставить поле пустым, он создастся автоматически.',
         backBtn2: 'Назад',
         createAccountBtn: 'Создать аккаунт',
-        tabAll: 'Все',
-        tabDirect: 'Личные',
-        tabGroups: 'Группы',
-        createChatBtn: 'Создать чат',
         sendBtn: 'Отправить',
         refreshMessagesBtn: 'Обновить сообщения',
-        rightPanelTitle: 'Профиль',
-        rightPanelSubtitle: 'Имя, номер, ID и управление аккаунтом',
-        profileCardTitle: 'Мой профиль',
-        languageTitle: 'Язык',
-        actionsTitle: 'Действия',
-        refreshChatsBtn: 'Обновить чаты',
-        deleteAccountBtn: 'Удалить мой аккаунт',
-        editTitle: 'Редактирование профиля',
-        cancelEditBtn: 'Назад',
-        saveEditBtn: 'Подтвердить',
-        logoutMenuText: 'Выйти',
-        menuMyProfile: 'Мой профиль',
-        menuSettings: 'Настройки',
         searchPlaceholder: 'Поиск',
         targetPlaceholder: '@id или user_id',
         messagePlaceholder: 'Напиши сообщение',
-        editBioPlaceholder: 'Bio',
         chooseChat: 'Выбери чат',
         chooseChatSub: 'Открой существующий чат или найди пользователя по @ID',
         directChat: 'Личный чат',
@@ -811,7 +823,54 @@
         chooseChatFirst: 'Сначала выбери чат',
         deleteAccountConfirm: 'Удалить текущий аккаунт? Номер и ID освободятся.',
         deleteAccountDone: 'Аккаунт удалён',
-        saveDone: 'Изменения сохранены'
+        saveDone: 'Изменения сохранены',
+        invalidToken: 'Сессия устарела. Войди заново.',
+        tabsAll: 'Все',
+        tabsDirect: 'Личные',
+        tabsGroups: 'Группы',
+        createChat: 'Создать чат',
+        myProfile: 'Мой профиль',
+        settings: 'Настройки',
+        language: 'Язык',
+        edit: 'Редактировать',
+        logout: 'Выйти',
+        deleteAccount: 'Удалить аккаунт',
+        profileTitle: 'Профиль',
+        profileSubtitle: 'Данные аккаунта',
+        settingsTitle: 'Настройки',
+        settingsSubtitle: 'Основные параметры приложения',
+        editTitle: 'Редактирование профиля',
+        editSubtitle: 'Имя, фамилия, ID и био',
+        languageTitle: 'Язык',
+        generalSettings: 'General Settings',
+        generalSettingsValue: 'Основные параметры',
+        animations: 'Animations and Performance',
+        animationsValue: 'Анимации и плавность',
+        notifications: 'Notifications',
+        notificationsValue: 'Уведомления и звуки',
+        dataStorage: 'Data and Storage',
+        dataStorageValue: 'Автозагрузка и кэш',
+        privacySecurity: 'Privacy and Security',
+        privacySecurityValue: 'Конфиденциальность',
+        chatFolders: 'Chat Folders',
+        chatFoldersValue: 'Папки чатов',
+        activeSessions: 'Active Sessions',
+        activeSessionsValue: 'Текущий браузер',
+        stickersEmoji: 'Stickers and Emoji',
+        stickersEmojiValue: 'Стикеры и эмодзи',
+        backToChats: 'Назад к чатам',
+        currentLanguage: 'Текущий язык',
+        save: 'Подтвердить',
+        back: 'Назад',
+        firstName: 'Имя',
+        lastName: 'Фамилия',
+        bio: 'Bio',
+        profileId: 'ID, например @myid',
+        chatsHeaderTitle: 'Чаты',
+        chatsHeaderSubtitle: 'Поиск, создание и список переписок',
+        currentSession: 'Текущая сессия',
+        languageEnglish: 'English',
+        languageRussian: 'Русский'
       },
       en: {
         authSubtitle: 'Dark messenger with turquoise accent',
@@ -826,29 +885,11 @@
         regHint: 'ID must start with @ and contain only English letters and digits. If left empty, it will be generated automatically.',
         backBtn2: 'Back',
         createAccountBtn: 'Create account',
-        tabAll: 'All',
-        tabDirect: 'Direct',
-        tabGroups: 'Groups',
-        createChatBtn: 'Create chat',
         sendBtn: 'Send',
         refreshMessagesBtn: 'Refresh messages',
-        rightPanelTitle: 'Profile',
-        rightPanelSubtitle: 'Name, number, ID and account management',
-        profileCardTitle: 'My profile',
-        languageTitle: 'Language',
-        actionsTitle: 'Actions',
-        refreshChatsBtn: 'Refresh chats',
-        deleteAccountBtn: 'Delete my account',
-        editTitle: 'Edit profile',
-        cancelEditBtn: 'Back',
-        saveEditBtn: 'Confirm',
-        logoutMenuText: 'Log out',
-        menuMyProfile: 'My profile',
-        menuSettings: 'Settings',
         searchPlaceholder: 'Search',
         targetPlaceholder: '@id or user_id',
         messagePlaceholder: 'Write a message',
-        editBioPlaceholder: 'Bio',
         chooseChat: 'Choose a chat',
         chooseChatSub: 'Open an existing chat or find a user by @ID',
         directChat: 'Direct chat',
@@ -863,11 +904,78 @@
         chooseChatFirst: 'Choose a chat first',
         deleteAccountConfirm: 'Delete current account? The number and ID will be released.',
         deleteAccountDone: 'Account deleted',
-        saveDone: 'Changes saved'
+        saveDone: 'Changes saved',
+        invalidToken: 'Session expired. Log in again.',
+        tabsAll: 'All',
+        tabsDirect: 'Direct',
+        tabsGroups: 'Groups',
+        createChat: 'Create chat',
+        myProfile: 'My profile',
+        settings: 'Settings',
+        language: 'Language',
+        edit: 'Edit',
+        logout: 'Log out',
+        deleteAccount: 'Delete account',
+        profileTitle: 'Profile',
+        profileSubtitle: 'Account data',
+        settingsTitle: 'Settings',
+        settingsSubtitle: 'Main application options',
+        editTitle: 'Edit profile',
+        editSubtitle: 'First name, last name, ID and bio',
+        languageTitle: 'Language',
+        generalSettings: 'General Settings',
+        generalSettingsValue: 'Main options',
+        animations: 'Animations and Performance',
+        animationsValue: 'Motion and smoothness',
+        notifications: 'Notifications',
+        notificationsValue: 'Alerts and sounds',
+        dataStorage: 'Data and Storage',
+        dataStorageValue: 'Auto-download and cache',
+        privacySecurity: 'Privacy and Security',
+        privacySecurityValue: 'Privacy controls',
+        chatFolders: 'Chat Folders',
+        chatFoldersValue: 'Folders and sections',
+        activeSessions: 'Active Sessions',
+        activeSessionsValue: 'Current browser',
+        stickersEmoji: 'Stickers and Emoji',
+        stickersEmojiValue: 'Stickers and emoji',
+        backToChats: 'Back to chats',
+        currentLanguage: 'Current language',
+        save: 'Confirm',
+        back: 'Back',
+        firstName: 'First name',
+        lastName: 'Last name',
+        bio: 'Bio',
+        profileId: 'ID, for example @myid',
+        chatsHeaderTitle: 'Chats',
+        chatsHeaderSubtitle: 'Search, create and browse conversations',
+        currentSession: 'Current session',
+        languageEnglish: 'English',
+        languageRussian: 'Русский'
       }
     };
 
     function t(key){ return i18n[currentLang][key] || key; }
+
+    function loadLocalSettings() {
+      const raw = localStorage.getItem(localSettingsKey);
+      if (!raw) {
+        return {
+          general: { compactMode: false, showPreviews: true },
+          animations: { enabled: true, reducedMotion: false },
+          notifications: { desktop: true, sounds: true, previews: true },
+          dataStorage: { autoDownloadImages: true, autoDownloadFiles: false, cacheLimit: '512 MB' },
+          privacy: { showLastSeen: true, lockOnStart: false },
+          folders: { names: ['All', 'Direct', 'Groups'] },
+          stickers: { largeEmoji: true, animatedStickers: true }
+        };
+      }
+      try { return JSON.parse(raw); } catch { return {}; }
+    }
+
+    function saveLocalSettings() {
+      localStorage.setItem(localSettingsKey, JSON.stringify(localSettings));
+    }
 
     function applyTranslations(){
       authSubtitle.textContent = t('authSubtitle');
@@ -876,52 +984,37 @@
       registerBtnTop.textContent = t('registerBtnTop');
       loginBtnTop.textContent = t('loginBtnTop');
       loginTitle.textContent = t('loginTitle');
-      backBtn1.textContent = t('backBtn1');
+      backBtn1.textContent = t('back');
       okBtn1.textContent = t('okBtn1');
       regTitle.textContent = t('regTitle');
       regHint.textContent = t('regHint');
-      backBtn2.textContent = t('backBtn2');
+      backBtn2.textContent = t('back');
       createAccountBtn.textContent = t('createAccountBtn');
-      tabAll.textContent = t('tabAll');
-      tabDirect.textContent = t('tabDirect');
-      tabGroups.textContent = t('tabGroups');
-      createChatBtn.textContent = t('createChatBtn');
       sendBtn.textContent = t('sendBtn');
       refreshMessagesBtn.textContent = t('refreshMessagesBtn');
-      rightPanelTitle.textContent = t('rightPanelTitle');
-      rightPanelSubtitle.textContent = t('rightPanelSubtitle');
-      profileCardTitle.textContent = t('profileCardTitle');
-      languageTitle.textContent = t('languageTitle');
-      actionsTitle.textContent = t('actionsTitle');
-      refreshChatsBtn.textContent = t('refreshChatsBtn');
-      deleteAccountBtn.textContent = t('deleteAccountBtn');
-      editTitle.textContent = t('editTitle');
-      cancelEditBtn.textContent = t('cancelEditBtn');
-      saveEditBtn.textContent = t('saveEditBtn');
-      logoutMenuText.textContent = t('logoutMenuText');
-      menuMyProfile.textContent = t('menuMyProfile');
-      menuSettings.textContent = t('menuSettings');
+      logoutMenuText.textContent = t('logout');
+      deleteAccountMenuText.textContent = t('deleteAccount');
+      menuMyProfile.textContent = t('myProfile');
+      menuSettings.textContent = t('settings');
+      menuLanguage.textContent = t('language');
+      menuEdit.textContent = t('edit');
 
       searchInput.placeholder = t('searchPlaceholder');
-      targetUserId.placeholder = t('targetPlaceholder');
       messageText.placeholder = t('messagePlaceholder');
-      editBio.placeholder = t('editBioPlaceholder');
 
       if (!currentChatId) {
         chatTitle.textContent = t('chooseChat');
         chatMeta.textContent = t('chooseChatSub');
       }
 
-      langRuBtn.classList.toggle('active', currentLang === 'ru');
-      langEnBtn.classList.toggle('active', currentLang === 'en');
       setStatus(token ? t('statusAuthorized') : t('statusUnauthorized'));
+      renderLeft();
     }
 
     function setLang(lang){
       currentLang = lang;
       localStorage.setItem('lang', lang);
       applyTranslations();
-      renderChats(chatsCache);
     }
 
     async function parseResponse(res) {
@@ -948,10 +1041,32 @@
       if (!(options.body instanceof FormData) && !headers['Content-Type']) {
         headers['Content-Type'] = 'application/json';
       }
+
       const res = await fetch(path, { ...options, headers });
       const data = await parseResponse(res);
-      if (!res.ok) throw new Error(extractError(data, res.statusText));
+
+      if (!res.ok) {
+        const err = extractError(data, res.statusText);
+        if (res.status === 401 || String(err).toLowerCase().includes('invalid token')) {
+          forceLogoutWithMessage();
+        }
+        throw new Error(err);
+      }
+
       return data;
+    }
+
+    function forceLogoutWithMessage() {
+      localStorage.removeItem('access_token');
+      token = '';
+      cachedMe = null;
+      currentChatId = null;
+      if (ws) ws.close();
+      setStatus(t('statusUnauthorized'));
+      showApp(false);
+      goToEntry();
+      hideMenus();
+      entryResult.textContent = t('invalidToken');
     }
 
     function setStatus(text) {
@@ -1036,7 +1151,7 @@
           body: JSON.stringify({
             phone_number: phone,
             password: password,
-            device_name: 'Browser'
+            device_name: navigator.userAgent.slice(0, 60)
           })
         });
 
@@ -1047,7 +1162,7 @@
         showApp(true);
         await loadMe();
         await loadChats();
-        openProfilePanel();
+        openProfileView();
       } catch (e) {
         registerResult.textContent = e.message;
       }
@@ -1066,7 +1181,7 @@
           body: JSON.stringify({
             phone_number: phone,
             password: password,
-            device_name: 'Browser'
+            device_name: navigator.userAgent.slice(0, 60)
           })
         });
 
@@ -1077,7 +1192,7 @@
         showApp(true);
         await loadMe();
         await loadChats();
-        openProfilePanel();
+        openChatsView();
       } catch (e) {
         loginResult.textContent = e.message;
       }
@@ -1089,67 +1204,374 @@
         cachedMe = me;
 
         const fullName = `${me.first_name || ''} ${me.last_name || ''}`.trim();
-
-        meName.textContent = fullName || '—';
-        mePhone.textContent = `${me.phone_prefix}${me.phone_number}`;
-        myLinkInfo.textContent = me.username_link || '—';
-
-        profileCardName.textContent = fullName || '—';
-        profileCardPhone.textContent = `${me.phone_prefix}${me.phone_number}`;
-        profileCardId.textContent = me.username_link || '—';
-        profileCardBio.textContent = me.bio ? me.bio : t('profileNoBio');
-
         menuProfileName.textContent = fullName || '—';
         menuProfileId.textContent = me.username_link || '—';
 
-        editFirstName.value = me.first_name || '';
-        editLastName.value = me.last_name || '';
-        editUsername.value = me.username_link || '';
-        editBio.value = me.bio || '';
+        renderLeft();
       } catch (e) {
-        meName.textContent = 'Ошибка';
-        mePhone.textContent = e.message;
-        myLinkInfo.textContent = '—';
+        if (!String(e.message).toLowerCase().includes('invalid token')) {
+          renderLeftError(e.message);
+        }
       }
-    }
-
-    function renderChats(chats){
-      const query = searchInput.value.trim().toLowerCase();
-      chatList.innerHTML = '';
-
-      chats
-        .filter(c => {
-          if (!query) return true;
-          const names = (c.members || [])
-            .map(m => `${m.first_name || ''} ${m.last_name || ''} ${m.username_link || ''}`.toLowerCase())
-            .join(' ');
-          return names.includes(query) || String(c.id).includes(query);
-        })
-        .forEach(c => {
-          const item = document.createElement('div');
-          item.className = 'chat-item' + (currentChatId === c.id ? ' active' : '');
-          const names = (c.members || []).map(m => `${m.first_name || ''} ${m.last_name || ''}`.trim()).join(', ');
-          item.innerHTML = `
-            <div class="chat-title">${c.title || (c.is_direct ? t('directChat') : 'Chat')}</div>
-            <div class="chat-sub">${names}</div>
-            <div class="chat-sub">ID: ${c.id}</div>
-          `;
-          item.onclick = () => openChat(c.id, names || ('Chat ' + c.id));
-          chatList.appendChild(item);
-        });
-    }
-
-    function filterChats(){
-      renderChats(chatsCache);
     }
 
     async function loadChats() {
       try {
         chatsCache = await apiFetch(`${api}/chats`);
-        renderChats(chatsCache);
+        renderLeft();
       } catch (e) {
-        chatList.innerHTML = `<div class="chat-sub">${e.message}</div>`;
+        renderLeftError(e.message);
       }
+    }
+
+    function renderLeftError(message) {
+      leftMode = 'chats';
+      leftViewProfile.classList.add('hidden');
+      leftViewSettings.classList.add('hidden');
+      leftViewSettingDetail.classList.add('hidden');
+      leftViewEdit.classList.add('hidden');
+      leftViewChats.classList.remove('hidden');
+
+      leftViewChats.innerHTML = `
+        <div class="panel-card">
+          <h4>Ошибка</h4>
+          <div class="panel-note">${escapeHtml(message)}</div>
+        </div>
+      `;
+    }
+
+    function renderLeft() {
+      leftViewChats.classList.toggle('hidden', leftMode !== 'chats');
+      leftViewProfile.classList.toggle('hidden', leftMode !== 'profile');
+      leftViewSettings.classList.toggle('hidden', leftMode !== 'settings');
+      leftViewSettingDetail.classList.toggle('hidden', leftMode !== 'setting-detail');
+      leftViewEdit.classList.toggle('hidden', leftMode !== 'edit');
+
+      if (leftMode === 'chats') renderChatsView();
+      if (leftMode === 'profile') renderProfileView();
+      if (leftMode === 'settings') renderSettingsView();
+      if (leftMode === 'setting-detail') renderSettingDetailView(window.currentSettingKey || 'language');
+      if (leftMode === 'edit') renderEditView();
+    }
+
+    function renderChatsView() {
+      const me = cachedMe || {};
+      const fullName = `${me.first_name || ''} ${me.last_name || ''}`.trim() || '—';
+      const phone = me.phone_number ? `${me.phone_prefix}${me.phone_number}` : '—';
+      const link = me.username_link || '—';
+      const query = searchInput.value.trim().toLowerCase();
+
+      const chatItems = chatsCache
+        .filter(c => {
+          if (!query) return true;
+          const names = (c.members || []).map(m => `${m.first_name || ''} ${m.last_name || ''} ${m.username_link || ''}`.toLowerCase()).join(' ');
+          return names.includes(query) || String(c.id).includes(query);
+        })
+        .map(c => {
+          const names = (c.members || []).map(m => `${m.first_name || ''} ${m.last_name || ''}`.trim()).join(', ');
+          const activeClass = currentChatId === c.id ? ' active' : '';
+          return `
+            <div class="chat-item${activeClass}" onclick="openChat(${c.id}, ${JSON.stringify(names || ('Chat ' + c.id))})">
+              <div class="chat-title">${escapeHtml(c.title || (c.is_direct ? t('directChat') : 'Chat'))}</div>
+              <div class="chat-sub">${escapeHtml(names)}</div>
+              <div class="chat-sub">ID: ${c.id}</div>
+            </div>
+          `;
+        })
+        .join('');
+
+      leftViewChats.innerHTML = `
+        <div class="section-tabs">
+          <div class="tab active">${t('tabsAll')}</div>
+          <div class="tab">${t('tabsDirect')}</div>
+          <div class="tab">${t('tabsGroups')}</div>
+        </div>
+
+        <div class="profile-mini">
+          <div class="name">${escapeHtml(fullName)}</div>
+          <div class="meta">${escapeHtml(phone)}</div>
+          <div class="meta">${escapeHtml(link)}</div>
+        </div>
+
+        <div class="chat-create">
+          <input id="dynamicTargetUserId" class="field" placeholder="${escapeHtml(t('targetPlaceholder'))}" />
+          <button class="btn" onclick="createDirectChatFromDynamic()">${t('createChat')}</button>
+        </div>
+
+        <div class="chat-list">
+          ${chatItems || `<div class="panel-note">${escapeHtml(t('chooseChatSub'))}</div>`}
+        </div>
+      `;
+    }
+
+    function renderProfileView() {
+      const me = cachedMe || {};
+      const fullName = `${me.first_name || ''} ${me.last_name || ''}`.trim() || '—';
+      const phone = me.phone_number ? `${me.phone_prefix}${me.phone_number}` : '—';
+      const link = me.username_link || '—';
+      const bio = me.bio || t('profileNoBio');
+
+      leftViewProfile.innerHTML = `
+        <div class="left-topline">
+          <button class="left-back" onclick="openChatsView()">←</button>
+          <div>
+            <div class="left-title">${t('profileTitle')}</div>
+            <div class="left-subtitle">${t('profileSubtitle')}</div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h4>${t('myProfile')}</h4>
+          <div class="panel-note">${escapeHtml(fullName)}</div>
+          <div class="panel-note">${escapeHtml(phone)}</div>
+          <div class="panel-note">${escapeHtml(link)}</div>
+          <div class="panel-note">${escapeHtml(bio)}</div>
+        </div>
+
+        <div class="panel-card">
+          <div class="stack">
+            <button class="btn" onclick="openEditProfile()">${t('edit')}</button>
+            <button class="btn secondary" onclick="openSettingsView()">${t('settings')}</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSettingsView() {
+      const items = [
+        ['general', t('generalSettings'), t('generalSettingsValue')],
+        ['animations', t('animations'), t('animationsValue')],
+        ['notifications', t('notifications'), t('notificationsValue')],
+        ['data-storage', t('dataStorage'), t('dataStorageValue')],
+        ['privacy', t('privacySecurity'), t('privacySecurityValue')],
+        ['folders', t('chatFolders'), t('chatFoldersValue')],
+        ['sessions', t('activeSessions'), t('activeSessionsValue')],
+        ['language', t('language'), currentLang === 'ru' ? t('languageRussian') : t('languageEnglish')],
+        ['stickers', t('stickersEmoji'), t('stickersEmojiValue')]
+      ];
+
+      leftViewSettings.innerHTML = `
+        <div class="left-topline">
+          <button class="left-back" onclick="openChatsView()">←</button>
+          <div>
+            <div class="left-title">${t('settingsTitle')}</div>
+            <div class="left-subtitle">${t('settingsSubtitle')}</div>
+          </div>
+        </div>
+
+        <div class="settings-list">
+          ${items.map(([key, label, value]) => `
+            <div class="settings-item" onclick="openSettingsSection('${key}')">
+              <div class="label">${escapeHtml(label)}</div>
+              <div class="value">${escapeHtml(value)}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderSettingDetailView(key) {
+      let title = '';
+      let content = '';
+
+      if (key === 'general') {
+        title = t('generalSettings');
+        content = `
+          ${toggleTemplate('compactMode', 'Compact mode', localSettings.general.compactMode, 'general')}
+          ${toggleTemplate('showPreviews', 'Show chat previews', localSettings.general.showPreviews, 'general')}
+        `;
+      }
+
+      if (key === 'animations') {
+        title = t('animations');
+        content = `
+          ${toggleTemplate('enabled', 'Enable animations', localSettings.animations.enabled, 'animations')}
+          ${toggleTemplate('reducedMotion', 'Reduced motion', localSettings.animations.reducedMotion, 'animations')}
+        `;
+      }
+
+      if (key === 'notifications') {
+        title = t('notifications');
+        content = `
+          ${toggleTemplate('desktop', 'Desktop notifications', localSettings.notifications.desktop, 'notifications')}
+          ${toggleTemplate('sounds', 'Message sounds', localSettings.notifications.sounds, 'notifications')}
+          ${toggleTemplate('previews', 'Preview text', localSettings.notifications.previews, 'notifications')}
+        `;
+      }
+
+      if (key === 'data-storage') {
+        title = t('dataStorage');
+        content = `
+          ${toggleTemplate('autoDownloadImages', 'Auto-download images', localSettings.dataStorage.autoDownloadImages, 'dataStorage')}
+          ${toggleTemplate('autoDownloadFiles', 'Auto-download files', localSettings.dataStorage.autoDownloadFiles, 'dataStorage')}
+          <div class="toggle-row">
+            <div>
+              <div class="label">Cache limit</div>
+              <div class="panel-note">Stored locally in browser settings</div>
+            </div>
+            <select class="select" style="max-width:140px" onchange="changeCacheLimit(this.value)">
+              <option ${localSettings.dataStorage.cacheLimit==='256 MB'?'selected':''}>256 MB</option>
+              <option ${localSettings.dataStorage.cacheLimit==='512 MB'?'selected':''}>512 MB</option>
+              <option ${localSettings.dataStorage.cacheLimit==='1 GB'?'selected':''}>1 GB</option>
+            </select>
+          </div>
+        `;
+      }
+
+      if (key === 'privacy') {
+        title = t('privacySecurity');
+        content = `
+          ${toggleTemplate('showLastSeen', 'Show last seen', localSettings.privacy.showLastSeen, 'privacy')}
+          ${toggleTemplate('lockOnStart', 'Lock on start', localSettings.privacy.lockOnStart, 'privacy')}
+        `;
+      }
+
+      if (key === 'folders') {
+        title = t('chatFolders');
+        content = `
+          <div class="panel-note">Current folders: ${escapeHtml((localSettings.folders.names || []).join(', '))}</div>
+          <div class="panel-note" style="margin-top:8px">In MVP this section is local and affects the interface only.</div>
+        `;
+      }
+
+      if (key === 'sessions') {
+        title = t('activeSessions');
+        content = `
+          <div class="panel-card" style="margin-bottom:0">
+            <h4>${t('currentSession')}</h4>
+            <div class="panel-note">${escapeHtml(navigator.userAgent)}</div>
+          </div>
+        `;
+      }
+
+      if (key === 'language') {
+        title = t('languageTitle');
+        content = `
+          <div class="panel-note">${t('currentLanguage')}: ${currentLang === 'ru' ? t('languageRussian') : t('languageEnglish')}</div>
+          <div class="lang-switch">
+            <div class="lang-chip ${currentLang === 'ru' ? 'active' : ''}" onclick="setLang('ru')">${t('languageRussian')}</div>
+            <div class="lang-chip ${currentLang === 'en' ? 'active' : ''}" onclick="setLang('en')">${t('languageEnglish')}</div>
+          </div>
+        `;
+      }
+
+      if (key === 'stickers') {
+        title = t('stickersEmoji');
+        content = `
+          ${toggleTemplate('largeEmoji', 'Large emoji', localSettings.stickers.largeEmoji, 'stickers')}
+          ${toggleTemplate('animatedStickers', 'Animated stickers', localSettings.stickers.animatedStickers, 'stickers')}
+        `;
+      }
+
+      leftViewSettingDetail.innerHTML = `
+        <div class="left-topline">
+          <button class="left-back" onclick="openSettingsView()">←</button>
+          <div>
+            <div class="left-title">${escapeHtml(title)}</div>
+            <div class="left-subtitle">${escapeHtml(t('settingsSubtitle'))}</div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          ${content}
+        </div>
+      `;
+    }
+
+    function renderEditView() {
+      const me = cachedMe || {};
+      leftViewEdit.innerHTML = `
+        <div class="left-topline">
+          <button class="left-back" onclick="openProfileView()">←</button>
+          <div>
+            <div class="left-title">${t('editTitle')}</div>
+            <div class="left-subtitle">${t('editSubtitle')}</div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="stack">
+            <input id="editFirstNameDynamic" class="field" placeholder="${escapeHtml(t('firstName'))}" value="${escapeHtml(me.first_name || '')}" />
+            <input id="editLastNameDynamic" class="field" placeholder="${escapeHtml(t('lastName'))}" value="${escapeHtml(me.last_name || '')}" />
+            <input id="editUsernameDynamic" class="field" placeholder="${escapeHtml(t('profileId'))}" value="${escapeHtml(me.username_link || '')}" />
+            <textarea id="editBioDynamic" class="field" placeholder="${escapeHtml(t('bio'))}">${escapeHtml(me.bio || '')}</textarea>
+            <div class="row">
+              <button class="btn ghost" onclick="openProfileView()">${t('back')}</button>
+              <button class="btn" onclick="saveProfileFromDynamic()">${t('save')}</button>
+            </div>
+            <div id="editResultDynamic" class="status-box"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleTemplate(field, label, value, group) {
+      return `
+        <div class="toggle-row">
+          <div>
+            <div class="label">${escapeHtml(label)}</div>
+          </div>
+          <div class="switch ${value ? 'active' : ''}" onclick="toggleSetting('${group}','${field}')"></div>
+        </div>
+      `;
+    }
+
+    function toggleSetting(group, field) {
+      localSettings[group][field] = !localSettings[group][field];
+      saveLocalSettings();
+      renderSettingDetailView(window.currentSettingKey || group);
+    }
+
+    function changeCacheLimit(value) {
+      localSettings.dataStorage.cacheLimit = value;
+      saveLocalSettings();
+      renderSettingDetailView('data-storage');
+    }
+
+    function openChatsView() {
+      leftMode = 'chats';
+      hideMenus();
+      renderLeft();
+    }
+
+    function openProfileView() {
+      leftMode = 'profile';
+      hideMenus();
+      renderLeft();
+    }
+
+    function openSettingsView() {
+      leftMode = 'settings';
+      hideMenus();
+      renderLeft();
+    }
+
+    function openLanguageSetting() {
+      openSettingsSection('language');
+    }
+
+    function openSettingsSection(key) {
+      window.currentSettingKey = key;
+      leftMode = 'setting-detail';
+      hideMenus();
+      renderLeft();
+    }
+
+    function openEditProfile() {
+      leftMode = 'edit';
+      hideMenus();
+      renderLeft();
+    }
+
+    function filterChats(){
+      if (leftMode === 'chats') renderChatsView();
+    }
+
+    async function createDirectChatFromDynamic() {
+      const input = document.getElementById('dynamicTargetUserId');
+      if (!input) return;
+      targetUserId.value = input.value;
+      await createDirectChat();
     }
 
     async function createDirectChat() {
@@ -1173,6 +1595,7 @@
 
         targetUserId.value = '';
         await loadChats();
+        openChatsView();
       } catch (e) {
         alert(e.message);
       }
@@ -1202,7 +1625,7 @@
         });
         messages.scrollTop = messages.scrollHeight;
       } catch (e) {
-        messages.innerHTML = `<div class="chat-sub">${e.message}</div>`;
+        messages.innerHTML = `<div class="chat-sub">${escapeHtml(e.message)}</div>`;
       }
     }
 
@@ -1220,13 +1643,19 @@
       }
     }
 
-    async function saveProfile(){
+    async function saveProfileFromDynamic() {
+      const editFirst = document.getElementById('editFirstNameDynamic');
+      const editLast = document.getElementById('editLastNameDynamic');
+      const editUser = document.getElementById('editUsernameDynamic');
+      const editBio = document.getElementById('editBioDynamic');
+      const editResult = document.getElementById('editResultDynamic');
+
       try {
         editResult.textContent = '';
         const payload = {
-          first_name: editFirstName.value.trim(),
-          last_name: editLastName.value.trim(),
-          username_link: editUsername.value.trim(),
+          first_name: editFirst.value.trim(),
+          last_name: editLast.value.trim(),
+          username_link: editUser.value.trim(),
           bio: editBio.value.trim()
         };
 
@@ -1237,8 +1666,8 @@
 
         cachedMe = updated;
         await loadMe();
-        openProfilePanel();
-        editResult.textContent = t('saveDone');
+        openProfileView();
+        alert(t('saveDone'));
       } catch (e) {
         editResult.textContent = e.message;
       }
@@ -1296,27 +1725,6 @@
       profileMenu.classList.toggle('hidden');
     }
 
-    function openProfilePanel(){
-      viewPanel.classList.remove('hidden');
-      editPanel.classList.add('hidden');
-      rightPanelTitle.textContent = t('rightPanelTitle');
-      rightPanelSubtitle.textContent = t('rightPanelSubtitle');
-      hideMenus();
-    }
-
-    function openSettingsPanel(){
-      openProfilePanel();
-      hideMenus();
-    }
-
-    function openEditPanel(){
-      viewPanel.classList.add('hidden');
-      editPanel.classList.remove('hidden');
-      rightPanelTitle.textContent = t('editTitle');
-      rightPanelSubtitle.textContent = '';
-      hideMenus();
-    }
-
     document.addEventListener('click', (e) => {
       const insideSidebarMenu = sidebarMenu.contains(e.target);
       const insideProfileMenu = profileMenu.contains(e.target);
@@ -1328,6 +1736,34 @@
       }
     });
 
+    function hideAllLeftViews() {
+      leftViewChats.classList.add('hidden');
+      leftViewProfile.classList.add('hidden');
+      leftViewSettings.classList.add('hidden');
+      leftViewSettingDetail.classList.add('hidden');
+      leftViewEdit.classList.add('hidden');
+    }
+
+    function renderLeft() {
+      hideAllLeftViews();
+      if (leftMode === 'chats') leftViewChats.classList.remove('hidden');
+      if (leftMode === 'profile') leftViewProfile.classList.remove('hidden');
+      if (leftMode === 'settings') leftViewSettings.classList.remove('hidden');
+      if (leftMode === 'setting-detail') leftViewSettingDetail.classList.remove('hidden');
+      if (leftMode === 'edit') leftViewEdit.classList.remove('hidden');
+
+      if (leftMode === 'chats') renderChatsView();
+      if (leftMode === 'profile') renderProfileView();
+      if (leftMode === 'settings') renderSettingsView();
+      if (leftMode === 'setting-detail') renderSettingDetailView(window.currentSettingKey || 'language');
+      if (leftMode === 'edit') renderEditView();
+    }
+
+    function showApp(show) {
+      authView.classList.toggle('hidden', show);
+      appView.classList.toggle('hidden', !show);
+    }
+
     applyTranslations();
 
     if (token) {
@@ -1335,11 +1771,20 @@
       showApp(true);
       loadMe();
       loadChats();
-      openProfilePanel();
+      openChatsView();
     } else {
       setStatus(t('statusUnauthorized'));
       showApp(false);
       goToEntry();
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
     }
   </script>
 </body>
