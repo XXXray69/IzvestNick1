@@ -123,8 +123,8 @@ def delete_my_account(
 
     chats = db.query(Chat).all()
     for chat in chats:
-      if current_user.id in {m.id for m in chat.members}:
-          chat.members = [m for m in chat.members if m.id != current_user.id]
+        if current_user.id in {m.id for m in chat.members}:
+            chat.members = [m for m in chat.members if m.id != current_user.id]
 
     chats = db.query(Chat).all()
     for chat in chats:
